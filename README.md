@@ -1,6 +1,14 @@
-# Final project -
+# Final project - Criollo
+###About
+Criollo is a NFT Store project that combine the nature of art, the tasty flavor of chocolate and the technology behind the blockchain to create the most unique experience.  
 
+This project was inspired by [@aisthisi_nft](https://aisthisi.art/)
 ## Project description
+Inititally, for the purpose of this final project, Criollo will consists on two parties, an Artist(who provide the digital asset to be attached to the chocolate) and the Buyer(person buys the digital art+chocolate).
+
+The artist will have a portal from where they can mint their art, 
+
+1. NFT mint portal, the artist will be able to mint a digital assset and become the NFT owner. This NFT will be locked for be transferred for a certain period of time Since NFT is a topic that is still in adoption  only the first part will be developed as purpose of the final bootcamp project
 
 ## Simple workflow
 ## Deployed version url:
