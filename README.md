@@ -14,13 +14,15 @@ The buyer, could buy the NFT in the marketplace, the smart contract is designed 
 1. Criollo create the art.
 2. Criollo mint NFT and list it in the marketplace.
 3. The buyer buy in the NFT in the marketplace.
-4. The NFT is locked for being transfered fro a period of time.(Simulating shipping time)
-5. The NFT is unlocked for being transfered(Proof of delivery)
-6. Withdrawn function only possible to trigger from the Creator.
-7. Creator also receives royalties anytime the NFT is sold.
-8. ## Deployed version url:
+4. Criollo make the chocolate and print the package according to the art.
+5. The NFT is locked for being transfered fro a period of time.(Simulating shipping time)
+6. The NFT is unlocked for being transfered(Proof of delivery)
+7. Withdrawn function only possible to trigger from the Creator.
+8. Creator also receives royalties anytime the NFT is sold.
+9. ## Deployed version url:
 
 ### Prerequisites
+
 
 - Node.js >= v14
 - Truffle and Ganache
@@ -46,3 +48,20 @@ The buyer, could buy the NFT in the marketplace, the smart contract is designed 
 - `contracts`: Smart contracts that are deployed in the Rinkeby testnet.
 - `migrations`: Migration files for deploying contracts in `contracts` directory.
 - `test`: Tests for smart contracts.
+
+## TODO
+### Smart contract
+1. Update baseURI 
+2. Implement/check how tokenURI is added to the mint
+
+
+### FrontEnd
+1. Check code for mint button
+2. Interact with Metamask
+3. Message when minted
+4. Update frontend according to the collection(tokens left for e.g)
+### IPFS
+1. Select some IMages
+2. check how to use a json generator
+3. Upload images to the ipfs
+4. Upload json to the ipfs
