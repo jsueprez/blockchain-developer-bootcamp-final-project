@@ -2,17 +2,18 @@
 pragma solidity 0.8.3;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract CriolloToken is ERC721, Pausable, Ownable {
+contract CriolloToken is ERC721, Ownable {
     using Counters for Counters.Counter;
 
+    address payable public _owner;
     Counters.Counter private _tokenIdCounter;
+
     string public baseURI;
     string public baseExtension = ".json";
-    uint256 public cost = 0 ether;
+    uint256 public cost = 0.25 ether;
     uint256 public maxMintAmount = 1;
 
     enum State {
@@ -23,29 +24,23 @@ contract CriolloToken is ERC721, Pausable, Ownable {
         Delivered
     }
 
-    uint256 public listingFee = 0.025 ether;
-    uint256 public minPrice = 0.5 ether;
-
     // internal
     function _baseURI() internal view virtual override returns (string memory) {
         return baseURI;
     }
 
-    function setListingFee(uint256 _newPrice) public onlyOwner {
-        listingFee = _newPrice * (1 ether);
-    }
-
-    function setMinimumAssetPrice(uint256 _newPrice) public onlyOwner {
-        minPrice = _newPrice * (1 ether);
-    }
+    event Purchase(address owner, uint256 price, uint256 id);
 
     mapping(address => uint256) public tokenOwners;
+    mapping(uint256 => uint8) public state;
+    mapping(uint256 => uint256) public price;
 
     constructor(
         string memory _name,
         string memory _symbol,
         string memory _initBaseURI
     ) ERC721(_name, _symbol) {
+        _owner = payable(msg.sender);
         setBaseURI(_initBaseURI);
     }
 
@@ -67,24 +62,44 @@ contract CriolloToken is ERC721, Pausable, Ownable {
         require(success);
     }
 
-    function safeMint(uint256 _mintAmount) public payable onlyOwner {
-        require(balanceOf(msg.sender) == 0, "Only 1 mint per account");
-        require(_mintAmount > 0);
-        require(_mintAmount <= maxMintAmount);
+    function safeMint(uint256 _price) public payable onlyOwner {
+        uint256 _tokenID = _tokenIdCounter.current();
 
-        uint256 tokenID = _tokenIdCounter.current();
+        //_mint(address(this), _tok_tokenIDenId);
+        //_setTokenURI(_tokenId, _tokenURI);
 
-        if (msg.sender != owner()) {
-            require(msg.value >= cost * _mintAmount);
-        }
-
-        _safeMint(msg.sender, _tokenIdCounter.current());
+        _safeMint(msg.sender, _tokenID);
         _tokenIdCounter.increment();
 
-        tokenOwners[msg.sender] = tokenID;
+        tokenOwners[msg.sender] = _tokenID;
+        price[_tokenID] = _price;
+        state[_tokenID] = State.ForSale;
     }
 
     function getTokenID(address tokenOwner) public view returns (uint256) {
         return tokenOwners[tokenOwner];
+    }
+
+    function getState(uint256 _tokenID) public view returns (State) {
+        return state[_tokenID];
+    }
+
+    function buy(uint256 _id) external payable {
+        _validate(_id); //check req. for trade
+        _trade(_id); //swap nft for eth
+
+        emit Purchase(msg.sender, price[_id], _id);
+    }
+
+    function _validate(uint256 _id) internal {
+        require(_exists(_id), "Error, wrong Token id"); //not exists
+        //require(!sold[_id], "Error, Token is sold"); //already sold
+        require(msg.value >= price[_id], "Error, Token costs more"); //costs more
+    }
+
+    function _trade(uint256 _id) internal {
+        _transfer(address(this), msg.sender, _id); //nft to user
+        _owner.transfer(msg.value); //eth to owner
+        sold[_id] = true; //nft is sold
     }
 }
