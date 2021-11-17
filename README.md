@@ -35,7 +35,6 @@ Allow the user to introduce a shipping addres.
 
 - Node.js >= v14
 - Truffle and Ganache
-- Yarn
 - `git checkout master`
 
 ### Contracts
