@@ -1,5 +1,5 @@
 # Final project - Criollo
-###About
+### About
 Criollo is a NFT Store project that combine the nature of art, the tasty flavor of chocolate and the technology behind the blockchain to create the most unique experience.  
 
 This project was inspired by [@aisthisi_nft](https://aisthisi.art/)
