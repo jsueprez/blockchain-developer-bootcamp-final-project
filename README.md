@@ -26,19 +26,17 @@ Covered in  the final Project
 ## Deployed version url:
 
 ### Future implementation
-Criollo will provide a MarketPLace where the token owners can trade their assets.
-Criollo will let any user mint a digital asset and afterward transfer it as a gift(NFT + chocolate)
-Allow the user to introduce a shipping addres.
+- Criollo will provide a MarketPLace where the token owners can trade their assets.
+- Criollo will let any user mint a digital asset and afterward transfer it as a gift(NFT + chocolate)
+- Allow the user to introduce a shipping addres.
+- more ideas coming...
 
 ### Prerequisites
-
-
 - Node.js >= v14
 - Truffle and Ganache
 - `git checkout master`
 
 ### Contracts
-
 - Run `npm install` in project root to install Truffle build and smart contract dependencies
 - Run local testnet in port `7545` with an Ethereum client, e.g. Ganache
 - `truffle migrate --network development`
