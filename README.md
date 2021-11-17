@@ -3,23 +3,32 @@
 Criollo is a NFT Store project that combine the nature of art, the tasty flavor of chocolate and the technology behind the blockchain to create the most unique experience.  
 
 This project was inspired by [@aisthisi_nft](https://aisthisi.art/)
+
 ## Project description
 Inititally, for the purpose of this final project, Criollo will consists on two parties:
 
-Criollo[Artist and chocolate maker], will have a portal to mint the Criollo NFT. The art consist in a unique design with a meaningful message.  Afterwards, the NFT will be listed for sale in an Ethereum Marketplace like Opensea so "The Buyer" can access to it.
+Covered in  the final Project
+- Criollo[Contract owner], will mint all the NFT initially.
 
-The buyer, could buy the NFT in the marketplace, the smart contract is designed in a way that the token transfer functionality will be locked until the buyer receive the product(package printed with the art and a delicious chocolate inside). For the purpose of this project, proof of delivery will simulated using a perdiod of locking time, so after the NFT is bought, the transfer function will be locked during 1 min. 
+- The buyer[Token owner], could buy/trade the NFT.
 
 ## Simple workflow
 1. Criollo create the art.
-2. Criollo mint NFT and list it in the marketplace.
-3. The buyer buy in the NFT in the marketplace.
-4. Criollo make the chocolate and print the package according to the art.
-5. The NFT is locked for being transfered fro a period of time.(Simulating shipping time)
-6. The NFT is unlocked for being transfered(Proof of delivery)
-7. Withdrawn function only possible to trigger from the Creator.
-8. Creator also receives royalties anytime the NFT is sold.
-9. ## Deployed version url:
+2. Criollo mint NFT, set an initial price and set the status of the NFT to <FORSALE>.
+3. The buyer could buy only NFTs that are in <FORSALE> state.
+4. Once the buyer buys a NFT, status is set automatically to <LOCKED>.
+5. Criollo can retrieve the list of IDs which are <LOCKED> and change them to <SHIPPED>. An timer will run for 1 minute(to simulate the shipment process).
+6. When timeout, the NFT token id will change the state to <UNLOCKED>. Representing that the buyer received the phisical asset(Chocolate)
+7. The Buyer could only trade the NFT when it is in <SHIPPED> state.
+8. Criollo has the possibility to withdraw funds received by the sales of the NFT. 
+9. The first buyer also receive royalties anytime the NFT is sold.
+
+## Deployed version url:
+
+### Future implementation
+Criollo will provide a MarketPLace where the token owners can trade their assets.
+Criollo will let any user mint a digital asset and afterward transfer it as a gift(NFT + chocolate)
+Allow the user to introduce a shipping addres.
 
 ### Prerequisites
 
@@ -53,15 +62,17 @@ The buyer, could buy the NFT in the marketplace, the smart contract is designed 
 ### Smart contract
 1. Update baseURI 
 2. Implement/check how tokenURI is added to the mint
-
+3. Check mint function to change state of the token_ID
+4. Add validation to trade function
+5. Check withdraw function
 
 ### FrontEnd
 1. Check code for mint button
 2. Interact with Metamask
 3. Message when minted
-4. Update frontend according to the collection(tokens left for e.g)
+
 ### IPFS
-1. Select some IMages
+1. Select some Images
 2. check how to use a json generator
 3. Upload images to the ipfs
 4. Upload json to the ipfs
