@@ -17,6 +17,7 @@ contract CriolloToken is ERC721, Ownable {
     uint256 public maxMintAmount = 1;
 
     enum State {
+        NotListed,
         ForSale,
         Locked,
         Unlocked,
@@ -32,7 +33,7 @@ contract CriolloToken is ERC721, Ownable {
     event Purchase(address owner, uint256 price, uint256 id);
 
     mapping(address => uint256) public tokenOwners;
-    mapping(uint256 => uint8) public state;
+    mapping(uint256 => State) public state;
     mapping(uint256 => uint256) public price;
 
     constructor(
@@ -42,6 +43,16 @@ contract CriolloToken is ERC721, Ownable {
     ) ERC721(_name, _symbol) {
         _owner = payable(msg.sender);
         setBaseURI(_initBaseURI);
+    }
+
+    modifier onlyForSaleTokens(uint256 _id) {
+        require(state[_id] == State.ForSale, "This Token is not For sale!!");
+        _;
+    }
+
+    modifier onlyUnlockedTokens(uint256 _id) {
+        require(state[_id] == State.Unlocked, "This Token is not Unlocked!!");
+        _;
     }
 
     function setBaseURI(string memory _newBaseURI) public onlyOwner {
@@ -62,6 +73,16 @@ contract CriolloToken is ERC721, Ownable {
         require(success);
     }
 
+    function markAsShipped(uint256 _id) public onlyOwner {
+        require(_exists(_id), "ERC721: operator query for nonexistent token");
+        state[_id] = State.Shipped;
+    }
+
+    function listTokenForSale(uint256 _id) public onlyOwner {
+        require(_exists(_id), "ERC721: operator query for nonexistent token");
+        state[_id] = State.ForSale;
+    }
+
     function safeMint(uint256 _price) public payable onlyOwner {
         uint256 _tokenID = _tokenIdCounter.current();
 
@@ -73,7 +94,6 @@ contract CriolloToken is ERC721, Ownable {
 
         tokenOwners[msg.sender] = _tokenID;
         price[_tokenID] = _price;
-        state[_tokenID] = State.ForSale;
     }
 
     function getTokenID(address tokenOwner) public view returns (uint256) {
@@ -84,22 +104,35 @@ contract CriolloToken is ERC721, Ownable {
         return state[_tokenID];
     }
 
-    function buy(uint256 _id) external payable {
-        _validate(_id); //check req. for trade
-        _trade(_id); //swap nft for eth
+    function buy(uint256 _id) external payable onlyForSaleTokens(_id) {
+        _validate(_id);
+
+        if (ERC721.ownerOf(_id) == _owner) {
+            _buy(_id); //buying to contract owner
+        } else {
+            _trade(_id); //buying to user
+        }
 
         emit Purchase(msg.sender, price[_id], _id);
     }
 
     function _validate(uint256 _id) internal {
         require(_exists(_id), "Error, wrong Token id"); //not exists
-        //require(!sold[_id], "Error, Token is sold"); //already sold
         require(msg.value >= price[_id], "Error, Token costs more"); //costs more
     }
 
-    function _trade(uint256 _id) internal {
-        _transfer(address(this), msg.sender, _id); //nft to user
-        _owner.transfer(msg.value); //eth to owner
-        sold[_id] = true; //nft is sold
+    function _buy(uint256 _id) internal {
+        _transfer(_owner, msg.sender, _id); //nft to user
+        state[_id] = State.Locked;
+        //sold[_id] = true; //nft is sold
+    }
+
+    function _trade(uint256 _id) internal onlyUnlockedTokens(_id) {
+        address payable _currentOwner = payable(ERC721.ownerOf(_id));
+
+        _transfer(ERC721.ownerOf(_id), msg.sender, _id); //nft to user
+
+        _currentOwner.transfer(msg.value); //eth to owner
+        //sold[_id] = true; //nft is sold
     }
 }

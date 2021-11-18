@@ -14,14 +14,16 @@ Covered in  the final Project
 
 ## Simple workflow
 1. Criollo create the art.
-2. Criollo mint NFT, set an initial price and set the status of the NFT to <FORSALE>.
-3. The buyer could buy only NFTs that are in <FORSALE> state.
-4. Once the buyer buys a NFT, status is set automatically to <LOCKED>.
-5. Criollo can retrieve the list of IDs which are <LOCKED> and change them to <SHIPPED>. An timer will run for 1 minute(to simulate the shipment process).
-6. When timeout, the NFT token id will change the state to <UNLOCKED>. Representing that the buyer received the phisical asset(Chocolate)
-7. The Buyer could only trade the NFT when it is in <SHIPPED> state.
-8. Criollo has the possibility to withdraw funds received by the sales of the NFT. 
-9. The first buyer also receive royalties anytime the NFT is sold.
+2. Criollo mint NFT, set an initial price.🆗
+3. Criollo can set the status of the NFT to <FORSALE>.🆗
+4. The buyer could buy only NFTs that are in <FORSALE> state.🆗
+5. Once the buyer buys a NFT, status is set automatically to <LOCKED>.🆗
+6. Criollo can retrieve the list of IDs which are <LOCKED> and change them to <SHIPPED>.🆗
+7. A timer will run for 1 minute(to simulate the shipment process).
+8. When timeout, the NFT token id will change the state to <UNLOCKED>. Representing that the buyer received the phisical asset(Chocolate)
+9. The Buyer could only trade the NFT when it is in <UNLOCKED> state.🆗
+10. Criollo has the possibility to withdraw funds received by the sales of the NFT. 🆗
+11. The first buyer also receive royalties anytime the NFT is sold.
 
 ## Deployed version url:
 
