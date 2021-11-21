@@ -1,5 +1,5 @@
 var CriolloToken = artifacts.require("./CriolloToken.sol");
 
 module.exports = function (deployer) {
-  deployer.deploy(CriolloToken);
+  deployer.deploy(CriolloToken, 'Criollo Token', 'CRI', 'someURI');
 };
