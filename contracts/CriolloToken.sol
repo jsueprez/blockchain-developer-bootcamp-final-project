@@ -173,10 +173,15 @@ contract CriolloToken is ERC721, Ownable {
         forSale(_id)
         paidEnough(criollos[_id].price)
     {
-        if (criollos[_id].tokenOwner == _owner) {
-            _buyFromCriollo(_id);
-        } else {
-            _buyFromUser(_id);
+        address payable _currentOwner = criollos[_id].tokenOwner;
+
+        _transfer(ownerOf(_id), msg.sender, _id);
+        _currentOwner.transfer(msg.value);
+
+        criollos[_id].tokenOwner = payable(msg.sender);
+
+        if (criollos[_id].state == State.ForSale) {
+            criollos[_id].state = State.Locked;
         }
 
         emit Purchase(msg.sender, criollos[_id].price, criollos[_id].tokenId);
@@ -197,19 +202,16 @@ contract CriolloToken is ERC721, Ownable {
         require(success);
     }
 
-    function _buyFromCriollo(uint256 _id) internal {
-        _transfer(_owner, msg.sender, _id);
-        _owner.transfer(msg.value);
-
-        criollos[_id].tokenOwner = payable(msg.sender);
-        criollos[_id].state = State.Locked;
-    }
-
-    function _buyFromUser(uint256 _id) internal isUnlocked(_id) {
-        address payable _currentOwner = criollos[_id].tokenOwner;
-
-        _transfer(_currentOwner, msg.sender, _id);
-        _currentOwner.transfer(msg.value);
-        criollos[_id].tokenOwner = payable(msg.sender);
+    function _transfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal override {
+        require(
+            criollos[tokenId].state == State.Unlocked ||
+                criollos[tokenId].state == State.ForSale,
+            "CriolloToken: Error, This token is not Locked for been trnasfer !"
+        );
+        super._transfer(from, to, tokenId);
     }
 }
