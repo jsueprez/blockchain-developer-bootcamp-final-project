@@ -75,3 +75,12 @@ Covered in  the final Project
 2. check how to use a json generator
 3. Upload images to the ipfs
 4. Upload json to the ipfs
+
+### Tomorrow
+add comment to all the function
+add event when necessary
+add test for events
+add test for withdraw
+add function to let only bob sell the token
+check _owner variable, coming from ERC721?
+actualizar proceso en README.md
