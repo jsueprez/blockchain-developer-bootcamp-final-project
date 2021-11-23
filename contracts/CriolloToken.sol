@@ -5,6 +5,11 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
+/// @title A contract for storing and trade the Criollo tokens.
+/// @author Josue Perez
+/// @notice You can use this contract to operate the supply chain and also to make operation with your NFT
+/// @dev All function calls are currently implemented without side effects
+/// @custom:experimental This is an experimental contract.
 contract CriolloToken is ERC721, Ownable {
     using Counters for Counters.Counter;
 
@@ -122,6 +127,9 @@ contract CriolloToken is ERC721, Ownable {
         baseExtension = _newBaseExtension;
     }
 
+    /// @notice Mints a new token and creates a new Item in the supply chain
+    /// @dev The token id is incremented automatically using Counters.sol
+    /// @param _price Initial price for the token.
     function safeMint(uint256 _price) public payable onlyOwner {
         uint256 _tokenId = _tokenIdCounter.current();
 
@@ -139,16 +147,27 @@ contract CriolloToken is ERC721, Ownable {
         _tokenIdCounter.increment();
     }
 
+    /// @notice Add a token to the market place
+    /// @dev This function can only be used for the contract owner to make the token available to others users.
+    /// @param _id Id of the token.
+    /// @param _price Price for the token.
     function addToMarketPlace(uint256 _id, uint256 _price)
         public
         isMinted(_id)
-        isOwner(_id)
         canBeListed(_id)
+        onlyOwner
     {
         criollos[_id].state = State.ForSale;
         criollos[_id].price = _price;
     }
 
+    /// @notice Fetch a token by Id
+    /// @dev Use this function whenever you need info about a token
+    /// @param _tokenId Id of the token.
+    /// @return tokenId - The Id of the token
+    /// @return price - The price of the token
+    /// @return state - The state of the token
+    /// @return tokenOwner - The owner's address of the token
     function getCriollo(uint256 _tokenId)
         public
         view
@@ -166,6 +185,9 @@ contract CriolloToken is ERC721, Ownable {
         return (tokenId, price, state, tokenOwner);
     }
 
+    /// @notice Buy a token
+    /// @dev _buyFromCriollo when the token is bough from Criollo Marketplace, _buyFromUser when the token is bought(trade) out of the Marketplace
+    /// @param _id Id of the token.
     function buy(uint256 _id)
         external
         payable
@@ -182,14 +204,22 @@ contract CriolloToken is ERC721, Ownable {
         emit Purchase(msg.sender, criollos[_id].price, criollos[_id].tokenId);
     }
 
+    /// @notice Ship an Item
+    /// @dev Only the contract owner can ship an Item, the token should be Bought first
+    /// @param _id Id of the token.
     function shipped(uint256 _id) public onlyOwner isMinted(_id) isLocked(_id) {
         criollos[_id].state = State.Shipped;
     }
 
+    /// @notice Unlock a Token
+    /// @dev Need to be the owner of the token
+    /// @param _id Id of the token.
     function unlockToken(uint256 _id) public isShipped(_id) isOwner(_id) {
         criollos[_id].state = State.Unlocked;
     }
 
+    /// @notice Withdraw balance
+    /// @dev From the contract owner to specific balance.
     function withdraw() public payable onlyOwner {
         (bool success, ) = payable(msg.sender).call{
             value: address(this).balance
