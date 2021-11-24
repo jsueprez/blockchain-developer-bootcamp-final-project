@@ -8,29 +8,27 @@ This project was inspired by [@aisthisi_nft](https://aisthisi.art/)
 Inititally, for the purpose of this final project, Criollo will consists on two parties:
 
 Covered in  the final Project
-- Criollo[Contract owner], will mint all the NFT initially.
+- Criollo[Contract owner], will mint all the NFT.
 
 - The buyer[Token owner], could buy/trade the NFT.
 
 ## Simple workflow
 1. Criollo create the art.
-2. Criollo mint NFT, set an initial price.🆗
-3. Criollo can set the status of the NFT to <FORSALE>.🆗
-4. The buyer could buy only NFTs that are in <FORSALE> state.🆗
-5. Once the buyer buys a NFT, status is set automatically to <LOCKED>.🆗
-6. Criollo can retrieve the list of IDs which are <LOCKED> and change them to <SHIPPED>.🆗
-7. A timer will run for 1 minute(to simulate the shipment process).
-8. When timeout, the NFT token id will change the state to <UNLOCKED>. Representing that the buyer received the phisical asset(Chocolate)
-9. The Buyer could only trade the NFT when it is in <UNLOCKED> state.🆗
-10. Criollo has the possibility to withdraw funds received by the sales of the NFT. 🆗
-11. The first buyer also receive royalties anytime the NFT is sold.
+2. Criollo mint NFT, set an initial price.
+3. Criollo list the NFT to the Market Place.
+4. The buyer could buy only NFTs that are in Criollo's Market Place.
+5. Once the buyer buys a NFT, NFT get locked, so the buyer could not sell/transfer it.
+6. Criollo send the physical asset(Criollos's Chocolate) to the buyer and update the status of the NFT.
+7. Once the buyer received the physical asset, the NFT can be unlocked by the buyer.
+8. The buys can now sell/transfer the NFT.
+9. Criollo has the possibility to withdraw funds received by the sales of the NFT.
 
 ## Deployed version url:
 
 ### Future implementation
-- Criollo will provide a MarketPLace where the token owners can trade their assets.
-- Criollo will let any user mint a digital asset and afterward transfer it as a gift(NFT + chocolate)
+- Criollo will let the users trade the NFT in its own Marketplace.
 - Allow the user to introduce a shipping addres.
+- Proof of receipt of physical asset. 
 - more ideas coming...
 
 ### Prerequisites
@@ -61,8 +59,8 @@ Covered in  the final Project
 ### Smart contract
 1. Update baseURI 
 2. Implement/check how tokenURI is added to the mint
-3. Check mint function to change state of the token_ID
-4. Add validation to trade function
+3. Check mint function to change state of the token_ID🆗
+4. Add validation to trade function🆗
 5. Check withdraw function
 
 ### FrontEnd
