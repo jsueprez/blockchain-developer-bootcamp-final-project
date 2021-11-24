@@ -5,11 +5,9 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-/// @title A contract for storing and trade the Criollo tokens.
+/// @title A contract for creating NFT tokens
 /// @author Josue Perez
-/// @notice You can use this contract to operate the supply chain and also to make operation with your NFT
-/// @dev All function calls are currently implemented without side effects
-/// @custom:experimental This is an experimental contract.
+/// @notice You can use this contract to Creates NFT tokens 
 contract CriolloToken is ERC721, Ownable {
     using Counters for Counters.Counter;
 
@@ -17,6 +15,9 @@ contract CriolloToken is ERC721, Ownable {
     event TokenUnlocked(uint256 _id, address _unlockerAddress);
     event NewTokenMinted(uint256 _tokenId);
 
+    /// @notice State of the token.
+    /// @dev Used for handling the intial phase of the workflow,
+    /// after Users unlock the token, state should remain the same.
     enum State {
         NotListed,
         ForSale,
@@ -24,6 +25,9 @@ contract CriolloToken is ERC721, Ownable {
         Shipped,
         Unlocked
     }
+
+    /// @notice 
+    /// @dev Used for handling the intial phase of the workflow, after a 
     struct Criollo {
         uint256 tokenId;
         uint256 price;
