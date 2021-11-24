@@ -239,7 +239,7 @@ contract CriolloToken is ERC721, Ownable {
     ) internal override {
         require(
             criollos[tokenId].state == State.Unlocked ||
-                criollos[tokenId].state == State.ForSale,
+                ownerOf(tokenId) == _owner,
             "CriolloToken: Error, This token is not Locked for been transfer !"
         );
         super._transfer(from, to, tokenId);
