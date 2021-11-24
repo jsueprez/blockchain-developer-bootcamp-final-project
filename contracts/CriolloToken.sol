@@ -31,35 +31,16 @@ contract CriolloToken is ERC721, Ownable {
         address payable tokenOwner;
     }
 
-    address payable public _owner;
     string public baseURI;
     string public baseExtension = ".json";
-    uint256 public cost = 0.25 ether;
-    uint256 public maxMintAmount = 1;
 
     Counters.Counter private _tokenIdCounter;
 
     mapping(uint256 => Criollo) criollos;
 
-    modifier isMinted(uint256 _id) {
-        require(
-            _exists(_id),
-            "CriolloToken: Error, This token has not been minted yet"
-        );
-        _;
-    }
-    modifier isOwner(uint256 _id) {
-        require(
-            ownerOf(_id) == msg.sender,
-            "CriolloToken: Error, You are not the token owner!"
-        );
-        _;
-    }
-
     modifier canBeListed(uint256 _id) {
         require(
-            criollos[_id].state == State.NotListed ||
-                criollos[_id].state == State.Unlocked,
+            criollos[_id].state == State.NotListed, 
             "CriolloToken: Error, This token can not be listed!"
         );
         _;
@@ -108,7 +89,6 @@ contract CriolloToken is ERC721, Ownable {
         string memory symbol_,
         string memory _initBaseURI
     ) ERC721(name_, symbol_) {
-        _owner = payable(msg.sender);
         setBaseURI(_initBaseURI);
     }
 
@@ -139,7 +119,7 @@ contract CriolloToken is ERC721, Ownable {
             price: _price,
             tokenId: _tokenId,
             state: State.NotListed,
-            tokenOwner: _owner
+            tokenOwner: payable(owner())
         });
 
         emit NewTokenMinted(_tokenId);
@@ -153,10 +133,13 @@ contract CriolloToken is ERC721, Ownable {
     /// @param _price Price for the token.
     function addToMarketPlace(uint256 _id, uint256 _price)
         public
-        isMinted(_id)
         canBeListed(_id)
         onlyOwner
     {
+        require(
+            _exists(_id),
+            "CriolloToken: Error, This token has not been minted yet"
+        );
         criollos[_id].state = State.ForSale;
         criollos[_id].price = _price;
     }
@@ -191,10 +174,13 @@ contract CriolloToken is ERC721, Ownable {
     function buy(uint256 _id)
         external
         payable
-        isMinted(_id)
         forSale(_id)
         paidEnough(criollos[_id].price)
     {
+        require(
+            _exists(_id),
+            "CriolloToken: Error, This token has not been minted yet"
+        );
         address payable _currentOwner = criollos[_id].tokenOwner;
 
         _transfer(ownerOf(_id), msg.sender, _id);
@@ -212,14 +198,22 @@ contract CriolloToken is ERC721, Ownable {
     /// @notice Ship an Item
     /// @dev Only the contract owner can ship an Item, the token should be Bought first
     /// @param _id Id of the token.
-    function shipped(uint256 _id) public onlyOwner isMinted(_id) isLocked(_id) {
+    function shipped(uint256 _id) public onlyOwner isLocked(_id) {
+        require(
+            _exists(_id),
+            "CriolloToken: Error, This token has not been minted yet"
+        );
         criollos[_id].state = State.Shipped;
     }
 
     /// @notice Unlock a Token
     /// @dev Need to be the owner of the token
     /// @param _id Id of the token.
-    function unlockToken(uint256 _id) public isShipped(_id) isOwner(_id) {
+    function unlockToken(uint256 _id) public isShipped(_id) {
+        require(
+            ownerOf(_id) == msg.sender,
+            "CriolloToken: Error, You are not the token owner!"
+        );
         criollos[_id].state = State.Unlocked;
     }
 
@@ -239,7 +233,7 @@ contract CriolloToken is ERC721, Ownable {
     ) internal override {
         require(
             criollos[tokenId].state == State.Unlocked ||
-                ownerOf(tokenId) == _owner,
+                ownerOf(tokenId) == owner(),
             "CriolloToken: Error, This token is not Locked for been transfer !"
         );
         super._transfer(from, to, tokenId);
