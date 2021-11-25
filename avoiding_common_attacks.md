@@ -16,6 +16,8 @@ Specific compiler pragma `0.8.3` used in contracts to avoid accidental bug inclu
 
 The return value from a call from the current owner of the token is checked with `require` to ensure transaction rollback if call fails.
 
+### SWC-118 Incorrect Constructor Name
+
 ## Modifiers used only for validation
 
 All modifiers in contract(s) only validate data with `require` statements.
