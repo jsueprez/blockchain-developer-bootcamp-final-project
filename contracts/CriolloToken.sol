@@ -2,6 +2,7 @@
 pragma solidity 0.8.3;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
@@ -11,8 +12,9 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 /// This token is linked with a physical assets(a Chocolate) that will be send once
 /// the user buy it at our Market place, after receive the physical assets the user
 /// is able to trade the NFT token using another Market place for instance OpenSea
-contract CriolloToken is ERC721, Ownable {
+contract CriolloToken is ERC721Enumerable, Ownable {
     using Counters for Counters.Counter;
+    using Strings for uint256;
 
     /// @notice Emitted when an user buy a NFT in our MarketPlace
     /// @param owner The address of the Token Owner,
@@ -138,7 +140,7 @@ contract CriolloToken is ERC721, Ownable {
     /// @notice Mints a new token
     /// @dev Only the contract owner can mints tokens
     /// @param _price Initial price for the token.
-    function safeMint(uint256 _price) public payable onlyOwner {
+    function safeMint(uint256 _price) public onlyOwner {
         uint256 _tokenId = _tokenIdCounter.current();
 
         criollos[_tokenId] = Criollo({
@@ -155,6 +157,31 @@ contract CriolloToken is ERC721, Ownable {
         );
 
         _tokenIdCounter.increment();
+    }
+
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        virtual
+        override
+        returns (string memory)
+    {
+        require(
+            _exists(tokenId),
+            "ERC721Metadata: URI query for nonexistent token"
+        );
+
+        string memory currentBaseURI = _baseURI();
+        return
+            bytes(currentBaseURI).length > 0
+                ? string(
+                    abi.encodePacked(
+                        currentBaseURI,
+                        tokenId.toString(),
+                        baseExtension
+                    )
+                )
+                : "";
     }
 
     /// @notice Add a token to the market place
@@ -254,7 +281,7 @@ contract CriolloToken is ERC721, Ownable {
     }
 
     /// @notice Transfer function
-    /// @dev This function was overriden from the original, so we can avoid the token to be transfer if it is not unlocked.
+    /// @dev This function is overriden from ERC721:_transfer, so we can avoid the token to be transfer if it is not unlocked.
     function _transfer(
         address from,
         address to,
@@ -263,7 +290,7 @@ contract CriolloToken is ERC721, Ownable {
         require(
             criollos[tokenId].state == State.Unlocked ||
                 ownerOf(tokenId) == owner(),
-            "CriolloToken: Error, This token is not Locked for being transfer !"
+            "CriolloToken: Error, This token is Locked and can not be transfered !"
         );
         super._transfer(from, to, tokenId);
     }
