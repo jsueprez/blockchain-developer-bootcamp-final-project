@@ -7,12 +7,29 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 /// @title A contract for creating NFT tokens
 /// @author Josue Perez
-/// @notice You can use this contract to Creates NFT tokens 
+/// @notice You can use this contract to Creates NFT tokens called CriollosToken
+/// This token is linked with a physical assets(a Chocolate) that will be send once
+/// the user buy it at our Market place, after receive the physical assets the user
+/// is able to trade the NFT token using another Market place for instance OpenSea
 contract CriolloToken is ERC721, Ownable {
     using Counters for Counters.Counter;
 
+    /// @notice Emitted when an user buy a NFT in our MarketPlace
+    /// @param owner The address of the Token Owner,
+    /// @param price The price for the token was bought
+    /// @param id The id of the NFT token.
+    /// @dev The price is only used in the first sale
     event Purchase(address owner, uint256 price, uint256 id);
+
+    /// @notice Emitted when the token owner unlock the NFT once receive the chocolate
+    /// @param owner The address of the Token Owner,
+    /// @param id The id of the NFT token.
+    /// @param _unlockerAddress Address who unlocked the token
     event TokenUnlocked(uint256 _id, address _unlockerAddress);
+
+    /// @notice Emitted when a new token is minted
+    /// @param owner The address of the Token Owner,
+    /// @param _tokenId The id of minted NFT token.
     event NewTokenMinted(uint256 _tokenId);
 
     /// @notice State of the token.
@@ -26,8 +43,8 @@ contract CriolloToken is ERC721, Ownable {
         Unlocked
     }
 
-    /// @notice 
-    /// @dev Used for handling the intial phase of the workflow, after a 
+    /// @notice State object for handling the state of the NFT
+    /// @dev tokenIs is incremented using Counters
     struct Criollo {
         uint256 tokenId;
         uint256 price;
@@ -40,16 +57,19 @@ contract CriolloToken is ERC721, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
+    /// @dev Mapping from token ID to Criollo objects
     mapping(uint256 => Criollo) criollos;
 
+    /// @dev Generate an exception if token can not be Listed in the MarketPlace
     modifier canBeListed(uint256 _id) {
         require(
-            criollos[_id].state == State.NotListed, 
+            criollos[_id].state == State.NotListed,
             "CriolloToken: Error, This token can not be listed!"
         );
         _;
     }
 
+    /// @dev Generate an exception if token is not unlocked
     modifier isUnlocked(uint256 _id) {
         require(
             criollos[_id].state == State.Unlocked,
@@ -58,6 +78,7 @@ contract CriolloToken is ERC721, Ownable {
         _;
     }
 
+    /// @dev Generate an exception if tocken is not Locked.
     modifier isLocked(uint256 _id) {
         require(
             criollos[_id].state == State.Locked,
@@ -66,6 +87,7 @@ contract CriolloToken is ERC721, Ownable {
         _;
     }
 
+    /// @dev Generate an exception if tocken is not Shipped
     modifier isShipped(uint256 _id) {
         require(
             criollos[_id].state == State.Shipped,
@@ -74,6 +96,7 @@ contract CriolloToken is ERC721, Ownable {
         _;
     }
 
+    /// @dev Generate an exception if tocken is not For Sale
     modifier forSale(uint256 _id) {
         require(
             criollos[_id].state == State.ForSale ||
@@ -83,11 +106,16 @@ contract CriolloToken is ERC721, Ownable {
         _;
     }
 
-    modifier paidEnough(uint256 _price) {
+    /// @dev Generate an exception if the user does not send exact amount of ether
+    modifier paidExactAmount(uint256 _price) {
         require(msg.value >= _price, "CriolloToken: Error, Token cost more");
         _;
     }
 
+    /// @notice Constructor called once when deploy the contract
+    /// @param name Name of the NFT token
+    /// @param symbol Symbol of the NFT
+    /// @param _initBaseURI Contains the base URL where the metadata of the NFT is stored
     constructor(
         string memory name_,
         string memory symbol_,
@@ -179,7 +207,7 @@ contract CriolloToken is ERC721, Ownable {
         external
         payable
         forSale(_id)
-        paidEnough(criollos[_id].price)
+        paidExactAmount(criollos[_id].price)
     {
         require(
             _exists(_id),
@@ -189,14 +217,14 @@ contract CriolloToken is ERC721, Ownable {
 
         _transfer(ownerOf(_id), msg.sender, _id);
 
-        (bool success, ) = _currentOwner.call{value : msg.value}("");
-        require(success, "Transfer failed.");
-
         criollos[_id].tokenOwner = payable(msg.sender);
 
         if (criollos[_id].state == State.ForSale) {
             criollos[_id].state = State.Locked;
         }
+
+        (bool success, ) = _currentOwner.call{value: msg.value}("");
+        require(success, "Transfer failed.");
 
         emit Purchase(msg.sender, criollos[_id].price, criollos[_id].tokenId);
     }
@@ -229,7 +257,7 @@ contract CriolloToken is ERC721, Ownable {
         (bool success, ) = payable(msg.sender).call{
             value: address(this).balance
         }("");
-        require(success,"Transfer failed.");
+        require(success, "Transfer failed.");
     }
 
     function _transfer(
