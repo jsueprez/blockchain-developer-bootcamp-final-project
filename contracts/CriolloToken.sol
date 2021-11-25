@@ -22,15 +22,9 @@ contract CriolloToken is ERC721, Ownable {
     event Purchase(address owner, uint256 price, uint256 id);
 
     /// @notice Emitted when the token owner unlock the NFT once receive the chocolate
-    /// @param owner The address of the Token Owner,
-    /// @param id The id of the NFT token.
+    /// @param _id The id of the NFT token.
     /// @param _unlockerAddress Address who unlocked the token
     event TokenUnlocked(uint256 _id, address _unlockerAddress);
-
-    /// @notice Emitted when a new token is minted
-    /// @param owner The address of the Token Owner,
-    /// @param _tokenId The id of minted NFT token.
-    event NewTokenMinted(uint256 _tokenId);
 
     /// @notice State of the token.
     /// @dev Used for handling the intial phase of the workflow,
@@ -49,7 +43,6 @@ contract CriolloToken is ERC721, Ownable {
         uint256 tokenId;
         uint256 price;
         State state;
-        address payable tokenOwner;
     }
 
     string public baseURI;
@@ -108,13 +101,16 @@ contract CriolloToken is ERC721, Ownable {
 
     /// @dev Generate an exception if the user does not send exact amount of ether
     modifier paidExactAmount(uint256 _price) {
-        require(msg.value >= _price, "CriolloToken: Error, Token cost more");
+        require(
+            msg.value == _price,
+            "CriolloToken: Error, Send the correct amount of ether"
+        );
         _;
     }
 
     /// @notice Constructor called once when deploy the contract
-    /// @param name Name of the NFT token
-    /// @param symbol Symbol of the NFT
+    /// @param name_ Name of the NFT token
+    /// @param symbol_ Symbol of the NFT
     /// @param _initBaseURI Contains the base URL where the metadata of the NFT is stored
     constructor(
         string memory name_,
@@ -139,28 +135,30 @@ contract CriolloToken is ERC721, Ownable {
         baseExtension = _newBaseExtension;
     }
 
-    /// @notice Mints a new token and creates a new Item in the supply chain
-    /// @dev The token id is incremented automatically using Counters.sol
+    /// @notice Mints a new token
+    /// @dev Only the contract owner can mints tokens
     /// @param _price Initial price for the token.
     function safeMint(uint256 _price) public payable onlyOwner {
         uint256 _tokenId = _tokenIdCounter.current();
 
-        _safeMint(msg.sender, _tokenId);
-
         criollos[_tokenId] = Criollo({
             price: _price,
             tokenId: _tokenId,
-            state: State.NotListed,
-            tokenOwner: payable(owner())
+            state: State.NotListed
         });
 
-        emit NewTokenMinted(_tokenId);
+        _safeMint(msg.sender, _tokenId);
+
+        require(
+            ownerOf(_tokenId) == msg.sender,
+            "CriollosToken: Error, Token was not minted succesfully"
+        );
 
         _tokenIdCounter.increment();
     }
 
     /// @notice Add a token to the market place
-    /// @dev This function can only be used for the contract owner to make the token available to others users.
+    /// @dev This function can only be used by the contract owner to make the token available to others users in our Market Place
     /// @param _id Id of the token.
     /// @param _price Price for the token.
     function addToMarketPlace(uint256 _id, uint256 _price)
@@ -182,26 +180,23 @@ contract CriolloToken is ERC721, Ownable {
     /// @return tokenId - The Id of the token
     /// @return price - The price of the token
     /// @return state - The state of the token
-    /// @return tokenOwner - The owner's address of the token
     function getCriollo(uint256 _tokenId)
         public
         view
         returns (
             uint256 tokenId,
             uint256 price,
-            uint256 state,
-            address tokenOwner
+            uint256 state
         )
     {
         tokenId = criollos[_tokenId].tokenId;
         price = criollos[_tokenId].price;
         state = uint256(criollos[_tokenId].state);
-        tokenOwner = criollos[_tokenId].tokenOwner;
-        return (tokenId, price, state, tokenOwner);
+        return (tokenId, price, state);
     }
 
-    /// @notice Buy a token
-    /// @dev _buyFromCriollo when the token is bough from Criollo Marketplace, _buyFromUser when the token is bought(trade) out of the Marketplace
+    /// @notice Buy a token in Criollos Market Place
+    /// @dev This is a custom function for buying function in our Market PLace.
     /// @param _id Id of the token.
     function buy(uint256 _id)
         external
@@ -213,11 +208,9 @@ contract CriolloToken is ERC721, Ownable {
             _exists(_id),
             "CriolloToken: Error, This token has not been minted yet"
         );
-        address payable _currentOwner = criollos[_id].tokenOwner;
+        address payable _currentOwner = payable(ownerOf(_id));
 
         _transfer(ownerOf(_id), msg.sender, _id);
-
-        criollos[_id].tokenOwner = payable(msg.sender);
 
         if (criollos[_id].state == State.ForSale) {
             criollos[_id].state = State.Locked;
@@ -230,7 +223,7 @@ contract CriolloToken is ERC721, Ownable {
     }
 
     /// @notice Ship an Item
-    /// @dev Only the contract owner can ship an Item, the token should be Bought first
+    /// @dev Only the contract owner can ship an Item, the token should be sold first
     /// @param _id Id of the token.
     function shipped(uint256 _id) public onlyOwner isLocked(_id) {
         require(
@@ -252,14 +245,16 @@ contract CriolloToken is ERC721, Ownable {
     }
 
     /// @notice Withdraw balance
-    /// @dev From the contract owner to specific balance.
+    /// @dev From the contract owner to specific address.
     function withdraw() public payable onlyOwner {
         (bool success, ) = payable(msg.sender).call{
             value: address(this).balance
         }("");
-        require(success, "Transfer failed.");
+        require(success, "CriolloToken: Error, Transfer failed.");
     }
 
+    /// @notice Transfer function
+    /// @dev This function was overriden from the original, so we can avoid the token to be transfer if it is not unlocked.
     function _transfer(
         address from,
         address to,
@@ -268,7 +263,7 @@ contract CriolloToken is ERC721, Ownable {
         require(
             criollos[tokenId].state == State.Unlocked ||
                 ownerOf(tokenId) == owner(),
-            "CriolloToken: Error, This token is not Locked for been transfer !"
+            "CriolloToken: Error, This token is not Locked for being transfer !"
         );
         super._transfer(from, to, tokenId);
     }

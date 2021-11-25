@@ -46,25 +46,11 @@ contract("CriolloToken", function (accounts) {
             );
 
             assert.equal(
-                newToken[3],
+                await instance.ownerOf(0),
                 owner,
                 "the address minting the token should be listed as the token owner",
             );
         })
-
-        it("should emit a NewTokenMinted event when an token is minted", async () => {
-            let eventEmitted = false;
-            const tx = await instance.safeMint(initialPrice, { from: owner });
-            if (tx.logs[1].event == "NewTokenMinted") {
-                eventEmitted = true;
-            }
-
-            assert.equal(
-                eventEmitted,
-                true,
-                "minting an token should emit a Minting event",
-            );
-        });
     })
 
     describe("Criollo listing a token to MarketPlace...", () => {
@@ -144,7 +130,7 @@ contract("CriolloToken", function (accounts) {
             );
 
             assert.equal(
-                token[3].toString(10),
+                await instance.ownerOf(0),
                 alice,
                 'the new token owner should be alice',
             );
@@ -273,7 +259,7 @@ contract("CriolloToken", function (accounts) {
             );
 
             assert.equal(
-                token[3].toString(10),
+                await instance.ownerOf(0),
                 bob,
                 'the new token owner should be bob',
             );
