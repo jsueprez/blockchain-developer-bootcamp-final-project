@@ -188,7 +188,9 @@ contract CriolloToken is ERC721, Ownable {
         address payable _currentOwner = criollos[_id].tokenOwner;
 
         _transfer(ownerOf(_id), msg.sender, _id);
-        _currentOwner.transfer(msg.value);
+
+        (bool success, ) = _currentOwner.call{value : msg.value}("");
+        require(success, "Transfer failed.");
 
         criollos[_id].tokenOwner = payable(msg.sender);
 
@@ -227,7 +229,7 @@ contract CriolloToken is ERC721, Ownable {
         (bool success, ) = payable(msg.sender).call{
             value: address(this).balance
         }("");
-        require(success);
+        require(success,"Transfer failed.");
     }
 
     function _transfer(
