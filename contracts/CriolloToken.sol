@@ -237,7 +237,7 @@ contract CriolloToken is ERC721Enumerable, Ownable {
         );
         address payable _currentOwner = payable(ownerOf(_id));
 
-        _transfer(ownerOf(_id), msg.sender, _id);
+        transferFrom(ownerOf(_id), msg.sender, _id);
 
         if (criollos[_id].state == State.ForSale) {
             criollos[_id].state = State.Locked;
@@ -281,17 +281,18 @@ contract CriolloToken is ERC721Enumerable, Ownable {
     }
 
     /// @notice Transfer function
-    /// @dev This function is overriden from ERC721:_transfer, so we can avoid the token to be transfer if it is not unlocked.
-    function _transfer(
+    /// @dev This function is overriden from ERC721:_transfer, so we can avoid the token to be transfer if it is not unlocked. See {IERC721-transferFrom}.
+    function transferFrom(
         address from,
         address to,
         uint256 tokenId
-    ) internal override {
+    ) public override {
         require(
             criollos[tokenId].state == State.Unlocked ||
-                ownerOf(tokenId) == owner(),
+                (ownerOf(tokenId) == owner() &&
+                    criollos[tokenId].state == State.ForSale),
             "CriolloToken: Error, This token is Locked and can not be transfered !"
         );
-        super._transfer(from, to, tokenId);
+        super.transferFrom(from, to, tokenId);
     }
 }

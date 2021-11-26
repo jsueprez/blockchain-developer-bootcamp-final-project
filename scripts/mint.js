@@ -7,9 +7,9 @@ const fs = require('fs');
 
 // !(migrate --reset) contract before running the script!
 
-module.exports = async function(callback) {
+module.exports = async function (callback) {
   try {
-    const totalSupply = 5;
+    const totalSupply = 3;
     const mintPrice = 1;
     //let nftsData = [] //NFT's database for front-end
     const criollo = await CRIOLLO.deployed()
@@ -43,21 +43,21 @@ module.exports = async function(callback) {
     // upload = await ipfs.add(globSource(`${__dirname}/metadata`, { recursive: true }))
     // 
     console.log('\nMinting NFTs...')
-    for(let i=0; i<totalSupply; i++){
+    for (let i = 1; i < totalSupply; i++) {
       await criollo.safeMint(mintPrice);
       // await nft.mint(`https://ipfs.io/ipfs/${upload.cid.toString()}/${files[i]}`, web3.utils.toWei('1', 'Ether'))
       // nftsData[i] = nftsData[i].slice(0, -2) + `,\n\t"price": ${await nft.price(i+1)},\n\t"uri": "${await nft.tokenURI(i+1)}"\n}` //add price&URI to nftsData
       // console.log(`\n${i+1} NFT is minted with URI:\n${await nft.tokenURI(i+1)}`)
     }
 
-  //   console.log('\nAggregating NFTs data...')
-  //   if(fs.existsSync(`${__dirname}/nftsData.js`)) {
-  //     await fs.unlinkSync(`${__dirname}/nftsData.js`)
-  //   }
-  //   await fs.writeFileSync(`${__dirname}/nftsData.js`, `export const nftsData = [${nftsData}]`)
+    //   console.log('\nAggregating NFTs data...')
+    //   if(fs.existsSync(`${__dirname}/nftsData.js`)) {
+    //     await fs.unlinkSync(`${__dirname}/nftsData.js`)
+    //   }
+    //   await fs.writeFileSync(`${__dirname}/nftsData.js`, `export const nftsData = [${nftsData}]`)
 
-  console.log('\n\nSuccess.')
-  } catch(error) {
+    console.log('\n\nSuccess.')
+  } catch (error) {
     console.log(error)
   }
   callback()
