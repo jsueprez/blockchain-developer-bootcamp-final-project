@@ -1,4 +1,8 @@
 import React, { Component } from "react";
+import { Route, Redirect, Switch } from 'react-router-dom';
+import NavBar from './components/navbar';
+import Market from './components/market';
+import NotFound from './components/notFound'
 import CriollotokenContract from "./contracts/CriolloToken.json";
 import getWeb3 from "./getWeb3";
 
@@ -8,7 +12,7 @@ class App extends Component {
   state = { storageValue: 0, web3: null, accounts: null, contract: null };
 
   componentDidMount = async () => {
-    try {
+    /*try {
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
 
@@ -32,7 +36,7 @@ class App extends Component {
         `Failed to load web3, accounts, or contract. Check console for details.`,
       );
       console.error(error);
-    }
+  }*/
   };
 
   runExample = async () => {
@@ -49,24 +53,22 @@ class App extends Component {
   };
 
   render() {
-    if (!this.state.web3) {
+    if (this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
-      <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 42</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
-      </div>
+      <React.Fragment>
+        <NavBar></NavBar>
+        <main className="container">
+          <Switch>
+            <Route path="/" component={Market} />
+            <Route path="/not-found" component={NotFound} />
+            <Redirect to="/not-found" />
+          </Switch>
+        </main>
+      </React.Fragment>
     );
+
   }
 }
 
