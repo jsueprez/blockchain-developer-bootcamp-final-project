@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { Route, Redirect, Switch } from 'react-router-dom';
 import NavBar from './components/navbar';
-import Market from './components/market';
-import NotFound from './components/notFound'
+import Main from './components/main'
+import './Style.css'
 import CriollotokenContract from "./contracts/CriolloToken.json";
 import getWeb3 from "./getWeb3";
 
@@ -59,13 +58,7 @@ class App extends Component {
     return (
       <React.Fragment>
         <NavBar></NavBar>
-        <main className="container">
-          <Switch>
-            <Route path="/" component={Market} />
-            <Route path="/not-found" component={NotFound} />
-            <Redirect to="/not-found" />
-          </Switch>
-        </main>
+        <Main></Main>
       </React.Fragment>
     );
 

@@ -43,3 +43,132 @@
 p {
   margin: 5px
 }
+
+.shadow-md, .shadow-xl {
+  box-shadow: var(--tw-ring-offset-shadow,0 0 transparent),var(--tw-ring-shadow,0 0 transparent),var(--tw-shadow) !important;
+}
+
+.shadow-md {
+  --tw-shadow: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06) !important;
+}
+.rounded-t-lg {
+  border-top-left-radius: .5rem !important;
+  border-top-right-radius: .5rem !important;
+}
+.max-w-sm {
+  max-width: 24rem !important;
+}
+.w-full {
+  width: 100% !important;
+}
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+.hover\:shadow-2xl:hover {
+  --tw-shadow: 0 25px 50px -12px rgba(0,0,0,0.25) !important;
+}
+
+.rounded-img{
+  border-radius: .5rem 0.5rem 0 0 !important;
+}
+.rounded-lg {
+  border-radius: .5rem !important;
+}
+.flex-col {
+  flex-direction: column !important;
+}
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.flex-1 {
+  flex: 1 1 0% !important;
+}
+
+.w-56 {
+  width: 12.5rem !important;
+}
+
+.gap-3 {
+  gap: .75rem !important;
+}
+
+.flex-col {
+  flex-direction: column !important;
+}
+.w-full {
+  width: 100% !important;
+}
+.h-full {
+  height: 100% !important;
+}
+.flex {
+  display: flex !important;
+}
+
+.md\:justify-between {
+  justify-content: space-between !important;
+}
+.md\:items-start {
+  align-items: flex-start !important;
+}
+.md\:flex-col {
+  flex-direction: column !important;
+}
+.px-6 {
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+}
+.text-white {
+  color: rgba(244,244,244,var(--tw-text-opacity)) !important;
+}
+
+.text-black {
+  --bs-text-opacity: 1;
+  color: rgba(var(--bs-black-rgb),var(--bs-text-opacity)) !important;
+}
+.px-4 {
+  padding-right: 1.5rem !important;
+  padding-left: 1.5rem !important;
+}
+
+.justify-between {
+  justify-content: space-between !important;
+}
+
+.items-center {
+  align-items: center !important;
+}
+
+.bg-nav{
+  background-color : #111111;
+}
+
+.md\:px-0 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.text-xl {
+  font-size: 1.25rem !important;
+}
+.text-lg, .text-xl {
+  line-height: 1.75rem !important;
+}
+.pb-20 {
+  padding-bottom: 5rem !important;
+}
+.px-5 {
+  padding-left: 1.25rem !important;
+  padding-right: 1.25rem !important;
+}
+.justify-start {
+  justify-content: flex-start !important;
+}
+
+.mt-24 {
+  margin-top: 6rem !important;
+}
+.max-w-6xl {
+  max-width: 72rem !important;
+}
