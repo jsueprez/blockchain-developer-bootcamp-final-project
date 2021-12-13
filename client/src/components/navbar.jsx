@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import eth from '../images/eth.png'
-import Identicon from 'identicon.js';
+// import eth from '../images/eth.png'
+// import Identicon from 'identicon.js';
 
 class NavBar extends Component {
     render() {

@@ -141,6 +141,8 @@ contract CriolloToken is ERC721Enumerable, Ownable {
     /// @dev Only the contract owner can mints tokens
     /// @param _price Initial price for the token.
     function safeMint(uint256 _price) public onlyOwner {
+        _tokenIdCounter.increment();
+
         uint256 _tokenId = _tokenIdCounter.current();
 
         criollos[_tokenId] = Criollo({
@@ -155,8 +157,6 @@ contract CriolloToken is ERC721Enumerable, Ownable {
             ownerOf(_tokenId) == msg.sender,
             "CriollosToken: Error, Token was not minted succesfully"
         );
-
-        _tokenIdCounter.increment();
     }
 
     function tokenURI(uint256 tokenId)
@@ -220,6 +220,22 @@ contract CriolloToken is ERC721Enumerable, Ownable {
         price = criollos[_tokenId].price;
         state = uint256(criollos[_tokenId].state);
         return (tokenId, price, state);
+    }
+
+    function fetchMarketItems() public view returns (Criollo[] memory) {
+        uint256 itemsCount = _tokenIdCounter.current();
+        uint256 currentIndex = 0;
+
+        Criollo[] memory items = new Criollo[](itemsCount);
+
+        for (uint256 i = 0; i < itemsCount; i++) {
+            uint256 currentId = i + 1;
+            Criollo storage currentItem = criollos[currentId];
+            items[currentIndex] = currentItem;
+            currentIndex++;
+        }
+
+        return items;
     }
 
     /// @notice Buy a token in Criollos Market Place

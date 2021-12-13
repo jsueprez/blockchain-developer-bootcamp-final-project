@@ -1,62 +1,96 @@
 import React, { Component } from 'react';
+import eth from '../images/eth.png'
+import cocoaBlack from '../images/cocoa_icon_black.png'
+import cocoaWhite from '../images/cocoa_icon_white.png'
+import cocoaGreen from '../images/cocoa_icon_green.png'
 
 class Card extends Component {
-  render() {
+
+  getTextState(state) {
+    if (state === '0') return 'Not listed'
+    if (state === '1') return 'Buy'
+    if (state === '2') return 'Locked'
+    if (state === '3') return 'Shipped'
+    if (state === '4') return 'Unlocked'
+  }
+
+  raiseBuyNft = (id, price) => {
+    this.props.onBuyNft(id, price);
+  }
+
+  renderCardButton(state) {
+    const { id, price } = this.props.nft;
+    const label = this.getTextState(state);
+    const buyEnable = label === 'Buy' ? ' btn-danger button-enable ' : 'button-disable disabled'
     return (
-      <div className="w-56">
-        <div className="rounded-lg bg-white flex flex-col shadow-md cursor-pointer hover:shadow-2xl" style={{ height: '570px' }}>
-          <a href="#" target="_blank" rel="noopener noreferrer">
-            <img className="rounded-img" src={"https://ipfs.io/ipfs/QmfZ7BC8iJ3viAEfHsiDR7pmmXCGWSmDTUXFQTwwHqByhy/1.png"} style={{ width: '250px', height: '417px' }} alt="art" />
-          </a>
-          <div className="flex text-black pb-2.5 px-4 w-full bg-white rounded-b-lg flex-col">
-            <div className="flex py-1 items-center justify-between">
-              <span className="text-black fs-6">
-                ID
-              </span>
-              <span className="text-black fs-6">
-                1
-              </span>
+      <button
+        type="Success"
+        className={`btn ${buyEnable}`}
+
+        onClick={() => this.raiseBuyNft(id, price)}
+
+      >
+        {label}
+      </button>
+    );
+  }
+
+  renderCardPrice(iconPath, value) {
+    return (
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1">
+          <div className="flex items-center justify-between">
+            <div className="flex self-end items-center gap-1">
+              <span className="font-bold text-sm">Price</span>
+              <div className="flex gap-1 items-center">
+                <img className="h-3" alt="ETH" src={iconPath} />
+                <span className="text-sm font-semibold">{value}</span>
+              </div>
             </div>
-            <div className="flex py-0 items-center justify-between">
-              <span className="text-black fs-6">
-                URI
-              </span>
-              <span className="text-black fs-6">
-                1
-              </span>
-            </div>
-            <div className="flex py-0 items-center justify-between">
-              <span className="text-black fs-6">
-                OWNER
-              </span>
-              <span className="text-black fs-6">
-                1
-              </span>
-            </div>
-          </div>
-          <div className="flex flex-col mx-auto py-2">
-            {0
-              ? <button
-                type="Success"
-                className="btn btn-block  "
-                style={{ border: '1px ridge #111111', color: "#8B8B8B", width: '180px' }}
-                // onClick={(e) => buyNft(this.props.dispatch, nft.id, nft.price)}
-                disabled
-              >
-                <b>S o l d</b>
-              </button>
-              : <button
-                type="Success"
-                className="btn btn-block btn-outline "
-                style={{ border: '1px ridge #12d39d', color: "#12d39d", width: '180px' }}
-              // onClick={(e) => buyNft(this.props.dispatch, nft.id, nft.price)}
-              >
-                <b>B u y</b>
-              </button>
-            }
           </div>
         </div>
       </div>
+    );
+  }
+
+  renderCardTitle(title, id) {
+    return (
+      <div className="flex py-2 items-center justify-between">
+        <span className="text-black text-xl">
+          {`${title} #${id}`}
+        </span>
+        {this.renderCocoaIcon()}
+      </div>
+    );
+  }
+
+  renderCocoaIcon() {
+    const { attributes } = this.props.nft;
+    let cocoaIcon = '';
+    if (attributes.background === 'dark') cocoaIcon = cocoaBlack;
+    if (attributes.background === 'light') cocoaIcon = cocoaWhite;
+    if (attributes.background === 'green') cocoaIcon = cocoaGreen;
+    return <img alt="preview" className="w-9" src={cocoaIcon} />;
+  }
+
+
+  render() {
+    const { nft } = this.props;
+    return (
+      <div className="w-56">
+        <div className="rounded-lg bg-white flex flex-col shadow-md cursor-pointer hover:shadow-2xl" style={{ height: '570px' }}>
+          <a href="/" target="_blank" rel="noopener noreferrer">
+            <img className="rounded-img" src={nft.image} style={{ width: '250px', height: '417px' }} alt="art" />
+          </a>
+          <div className="flex text-black pb-2.5 px-4 w-full bg-white rounded-b-lg flex-col">
+            {this.renderCardTitle('CRIOLLO', nft.id)}
+            {this.getTextState(nft.state) === 'Buy' ? this.renderCardPrice(eth, nft.price) : ''}
+          </div>
+          <div className="flex flex-col mx-auto py-4">
+            {this.renderCardButton(nft.state)}
+          </div>
+        </div>
+      </div >
     );
   }
 }
