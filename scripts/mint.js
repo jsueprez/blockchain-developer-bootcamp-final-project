@@ -4,6 +4,7 @@ var Web3 = require('web3');
 
 
 // !(migrate --reset) contract before running the script!
+//ganache-cli --deterministic -i 5777 --chainId 5777
 
 module.exports = async function (callback) {
   try {
@@ -11,6 +12,7 @@ module.exports = async function (callback) {
     const etherValue = '0.2'
     const weiPrice = Web3.utils.toWei(etherValue, 'ether');
     const criollo = await CRIOLLO.deployed()
+    const { owner } = await web3.eth.getAccounts()
 
     console.log('\nMinting NFTs...')
     for (let i = 1; i <= totalSupply; i++) {

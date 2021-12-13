@@ -228,13 +228,36 @@ contract CriolloToken is ERC721Enumerable, Ownable {
 
         Criollo[] memory items = new Criollo[](itemsCount);
 
-        for (uint256 i = 0; i < itemsCount; i++) {
-            uint256 currentId = i + 1;
-            Criollo storage currentItem = criollos[currentId];
+        for (uint256 id = 1; id <= itemsCount; id++) {
+            Criollo storage currentItem = criollos[id];
             items[currentIndex] = currentItem;
             currentIndex++;
         }
 
+        return items;
+    }
+
+    /* Returns onlyl items that a user has purchased */
+    function fetchMyNft() public view returns (Criollo[] memory) {
+        uint256 itemsCount = _tokenIdCounter.current();
+        uint256 itemsOwned = 0;
+        uint256 currentIndex = 0;
+
+        for (uint256 id = 1; id <= itemsCount; id++) {
+            if (ownerOf(id) == msg.sender) {
+                itemsOwned++;
+            }
+        }
+
+        Criollo[] memory items = new Criollo[](itemsOwned);
+
+        for (uint256 id = 1; id <= itemsCount; id++) {
+            if (ownerOf(id) == msg.sender) {
+                Criollo storage currentItem = criollos[id];
+                items[currentIndex] = currentItem;
+                currentIndex++;
+            }
+        }
         return items;
     }
 

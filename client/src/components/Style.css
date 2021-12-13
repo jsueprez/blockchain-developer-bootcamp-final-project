@@ -200,3 +200,25 @@ img, video {
   color: "#8B8B8B" !important;
   width: 180px !important;
 }
+
+.networkNav{
+  padding: 0.5rem 1rem;
+  border: 1mm ridge #009985;
+  border-radius: 0.50rem !important;
+  width: 125px;
+  height: 43px;
+}
+.balanceNav{
+  padding: 0.5rem 1rem;
+  border: 1mm ridge #009985;
+  border-radius:  0.50rem !important;
+  width: 140px;
+  height: 43px;
+}
+.accountNav{
+  padding: 0.5rem 1rem;
+  border: 1mm ridge #009985;
+  border-radius:  0.50rem !important;
+  width: 180px;
+  height: 43px;
+}

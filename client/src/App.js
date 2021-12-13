@@ -3,7 +3,6 @@ import NavBar from './components/navbar';
 import Main from './components/main'
 import './Style.css'
 import Criollo from "./contracts/CriolloToken.json";
-import getWeb3 from "./getWeb3";
 
 import Web3 from 'web3'
 
@@ -14,31 +13,66 @@ import { fetchNft } from './services/nftService'
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null, nfts: [] };
+  state = {
+    web3: null,
+    account: null,
+    network: null,
+    balance: null,
+    contract: null,
+    nfts: [],
+    myNfts: []
+  };
 
-  componentDidMount = async () => {
+  async UNSAFE_componentWillMount() {
+    console.log('UNSAFE_componentWillMount')
+    await this.loadBlockchainData();
+  };
+
+  async loadBlockchainData() {
+    /* Case 1, User connect for 1st time */
+    if (typeof window.ethereum !== 'undefined') {
+      await this.update()
+      /* Case 2 - User switch account */
+      window.ethereum.on('accountsChanged', async (accounts) => {
+        await this.update()
+      });
+      /* Case 3 - User switch network */
+      window.ethereum.on('chainChanged', async () => {
+        console.log('chainChanged');
+        await this.update()
+      });
+    }
+  }
+
+  update = async () => {
     try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
-      // //Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
+      let web3, network, account, netId, contract, nfts, myNfts, balance
 
-      // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      const deployedNetwork = Criollo.networks[networkId];
-      const instance = new web3.eth.Contract(
-        Criollo.abi,
-        deployedNetwork && deployedNetwork.address,
-      );
+      web3 = await this.loadWeb3()
+      network = await this.loadNetwork(web3)
+      account = await this.loadAccount(web3)
+      netId = await web3.eth.net.getId()
+      contract = await this.loadContract(web3, netId)
+      // contract ? nfts = await this.loadNftData(contract) : nfts = [];
+      nfts = await this.loadNftData(contract)
+      myNfts = await this.loadMyNfts(contract);
 
-      const data = await instance.methods.fetchMarketItems().call();
+      account && contract ? balance = await this.loadBalance(web3, account) : balance = null;
+    } catch (e) {
+      console.log('Error, update data: ', e)
+    }
+  }
+
+  loadNftData = async (contract) => {
+    try {
+      const data = await contract.methods.fetchMarketItems().call();
       const items = await Promise.all(data.map(async i => {
-        const tokenURI = await instance.methods.tokenURI(i.tokenId).call();
+        const tokenURI = await contract.methods.tokenURI(i.tokenId).call();
         const meta = await fetchNft(tokenURI);
         let item = {
           id: i.tokenId,
           state: i.state,
-          price: web3.utils.fromWei(i.price, 'ether'),
+          price: Web3.utils.fromWei(i.price, 'ether'),
           image: meta.data.image,
           name: meta.data.name,
           attributes: {
@@ -47,31 +81,51 @@ class App extends Component {
             logo: meta.data.attributes[2].value
           },
         }
-
         return item;
       }));
-
-      this.setState({ web3, accounts, nfts: items })
-
-      // 
-      // console.log(balance)
-      // // Set web3, accounts, and contract to the state, and then proceed with an
-      // // example of interacting with the contract's methods.
-      // this.setState({ web3, accounts, contract: instance }, this.runExample);
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
-      console.error(error);
+      this.setState({ nfts: items })
+      return items;
+    } catch (e) {
+      console.log('Error, load images', e)
     }
-  };
+  }
+
+  loadMyNfts = async (contract) => {
+    try {
+      const data = await contract.methods.fetchMyNft().call();
+      const items = await Promise.all(data.map(async i => {
+        const tokenURI = await contract.methods.tokenURI(i.tokenId).call();
+        const meta = await fetchNft(tokenURI);
+        let item = {
+          id: i.tokenId,
+          state: i.state,
+          price: Web3.utils.fromWei(i.price, 'ether'),
+          image: meta.data.image,
+          name: meta.data.name,
+          attributes: {
+            background: meta.data.attributes[0].value,
+            design: meta.data.attributes[1].value,
+            logo: meta.data.attributes[2].value
+          },
+        }
+        return item;
+      }));
+      console.log('mis nft:', items)
+
+      this.setState({ myNfts: items })
+
+      return items;
+    } catch (e) {
+      console.log('Error, load images', e)
+    }
+  }
 
   loadWeb3 = async () => {
     try {
       if (typeof window.ethereum !== 'undefined') {
         window.ethereum.autoRefreshOnNetworkChange = false;
         const web3 = new Web3(window.ethereum);
+        this.setState({ web3 })
         return web3
       }
     } catch (e) {
@@ -83,19 +137,27 @@ class App extends Component {
     try {
       let network = await web3.eth.net.getNetworkType()
       network = network.charAt(0).toUpperCase() + network.slice(1);
+      this.setState({ network })
       return network
     } catch (e) {
+      this.setState({ network: 'Wrong network' })
       console.log('Error, load network: ', e);
     }
   }
 
   loadAccount = async (web3) => {
     try {
-      const accounts = await web3.eth.getAccounts()
+      const accounts = await window.ethereum.request({
+        method:
+          'eth_accounts'
+      });
       const account = await accounts[0];
       if (typeof account !== 'undefined') {
+        this.setState({ account })
+        web3.eth.defaultAccount = account;
         return account;
       } else {
+        this.setState({ account: null })
         return null;
       }
     } catch (e) {
@@ -105,7 +167,10 @@ class App extends Component {
 
   loadBalance = async (web3, account) => {
     try {
-      const etherBalance = await web3.eth.getBalance(account);
+      const weiBalance = await web3.eth.getBalance(account);
+      const etherBalance = (weiBalance / 10 ** 18).toFixed(5);
+      this.setState({ balance: etherBalance })
+      return etherBalance;
     } catch (e) {
       console.log('Error, load balance: ', e)
     }
@@ -114,16 +179,17 @@ class App extends Component {
   loadContract = async (web3, netId) => {
     try {
       const contract = new web3.eth.Contract(Criollo.abi, Criollo.networks[netId].address);
+      this.setState({ contract })
       return contract;
     } catch (e) {
       window.alert('Wrong network!');
       console.log('Error, load contract: ', e);
+      this.setState({ contract: null })
       return null;
     }
   }
 
   handleBuyNft = async (id, price) => {
-    console.log(id, price);
     try {
       const web3 = await this.loadWeb3();
       await this.loadNetwork(web3);
@@ -134,7 +200,7 @@ class App extends Component {
 
       await contract.methods.buy(id).send({ from: account, value: amount })
         .on('receipt', async (r) => {
-          //update()
+          this.update()
           window.alert(`Congratulations, you've received NFT with ID: ${id}\nAddress: ${Criollo.networks[netId].address}`)
         })
         .on('error', (error) => {
@@ -147,16 +213,24 @@ class App extends Component {
   }
 
   render() {
-    if (!this.state.web3) {
+    const { web3, network, account, nfts, balance, myNfts } = this.state;
+    if (!web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
       <React.Fragment>
 
         <ToastContainer />
-        <NavBar></NavBar>
+        <NavBar
+          web3={web3}
+          account={account}
+          network={network}
+          balance={balance}
+        >
+        </NavBar>
         <Main
-          nfts={this.state.nfts}
+          nfts={nfts}
+          myNfts={myNfts}
           onBuyNft={this.handleBuyNft}
         >
         </Main>

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import eth from '../images/eth.png'
-import cocoaBlack from '../images/cocoa_icon_black.png'
-import cocoaWhite from '../images/cocoa_icon_white.png'
-import cocoaGreen from '../images/cocoa_icon_green.png'
+import eth from '../../images/eth.png'
+import cocoaBlack from '../../images/cocoa_icon_black.png'
+import cocoaWhite from '../../images/cocoa_icon_white.png'
+import cocoaGreen from '../../images/cocoa_icon_green.png'
 
 class Card extends Component {
 
