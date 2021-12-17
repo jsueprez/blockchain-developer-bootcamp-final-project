@@ -1,0 +1,27 @@
+{
+  "name": "blockchain-developer-bootcamp-final-project",
+  "version": "1.0.0",
+  "description": "Criollo is a NFT Store project that combine the nature of art, the tasty flavor of chocolate and the technology behind the blockchain to create the most unique experience.",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsueprez/blockchain-developer-bootcamp-final-project.git"
+  },
+  "author": "Antonio Josue Perez",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/jsueprez/blockchain-developer-bootcamp-final-project/issues"
+  },
+  "homepage": "https://github.com/jsueprez/blockchain-developer-bootcamp-final-project#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.4.1",
+    "@truffle/hdwallet-provider": "^2.0.0",
+    "dotenv": "^10.0.0"
+  }
+}

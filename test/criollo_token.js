@@ -10,6 +10,7 @@ contract("CriolloToken", function (accounts) {
     const initBaseURI = "someURI";
     const [owner, alice, bob] = accounts;
     const initialPrice = 1;
+    const firstTokenId = 1;
     const emptyAddress = "0x0000000000000000000000000000000000000000";
 
     beforeEach(async () => {
@@ -19,7 +20,6 @@ contract("CriolloToken", function (accounts) {
     it('has an name, symbol and initBaseURI', async function () {
         expect(await instance.name()).to.equal(tokenName);
         expect(await instance.symbol()).to.equal(symbol);
-        //expect(await instance._initBaseURI).to.equal(initBaseURI);
     });
 
     describe("Criollo minting process,,,,", () => {
@@ -31,7 +31,7 @@ contract("CriolloToken", function (accounts) {
         it("should the contract owner be able to mint any token", async () => {
             await instance.safeMint(initialPrice, { from: owner })
 
-            const newToken = await instance.getCriollo.call(0);
+            const newToken = await instance.getCriollo.call(firstTokenId);
 
             assert.equal(
                 newToken[1].toString(10),
@@ -46,7 +46,7 @@ contract("CriolloToken", function (accounts) {
             );
 
             assert.equal(
-                await instance.ownerOf(0),
+                await instance.ownerOf(firstTokenId),
                 owner,
                 "the address minting the token should be listed as the token owner",
             );
@@ -61,18 +61,18 @@ contract("CriolloToken", function (accounts) {
         })
 
         it("should revert if the token owner try to list a non-exiting token for sale ", async () => {
-            await catchRevert(instance.addToMarketPlace(1, listingPrice));
+            await catchRevert(instance.addToMarketPlace(2, listingPrice));
         })
 
         it("should revert if an user try to list a token which does not own to the market place", async () => {
-            await catchRevert(instance.addToMarketPlace(0, listingPrice, { from: alice }));
+            await catchRevert(instance.addToMarketPlace(firstTokenId, listingPrice, { from: alice }));
         })
 
         it("should update the state accordingly when a token is listed succesfully to the market place", async () => {
 
-            await instance.addToMarketPlace(0, listingPrice, { from: owner });
+            await instance.addToMarketPlace(firstTokenId, listingPrice, { from: owner });
 
-            const token = await instance.getCriollo.call(0);
+            const token = await instance.getCriollo.call(firstTokenId);
 
             assert.equal(
                 token[2].toString(10),
@@ -94,20 +94,20 @@ contract("CriolloToken", function (accounts) {
         beforeEach(async () => {
             await instance.safeMint(initialPrice, { from: owner });
             await instance.safeMint(initialPrice, { from: owner });
-            await instance.addToMarketPlace(0, listingPrice, { from: owner });
+            await instance.addToMarketPlace(firstTokenId, listingPrice, { from: owner });
         })
 
         it("should revert when users try to buy a token that does not exist", async () => {
-            await catchRevert(instance.buy(1, { from: alice, value: 1 }));
+            await catchRevert(instance.buy(2, { from: alice, value: 1 }));
         })
 
         it("should revert when users try to buy a token that is not for sale", async () => {
-            await catchRevert(instance.buy(1, { from: alice, value: 1 }));
+            await catchRevert(instance.buy(2, { from: alice, value: 1 }));
         })
 
         it("should revert when not enough value is sent when purchasing a token", async () => {
             const priceOfalice = 1;
-            await catchRevert(instance.buy(0, { from: alice, value: priceOfalice }));
+            await catchRevert(instance.buy(firstTokenId, { from: alice, value: priceOfalice }));
         })
 
         it("should allow someone to purchase a token and update state accordingly when the token owner is Criollo", async () => {
@@ -116,12 +116,12 @@ contract("CriolloToken", function (accounts) {
             var ownerBalanceBefore = await web3.eth.getBalance(owner);
             var aliceBalanceBefore = await web3.eth.getBalance(alice);
 
-            await instance.buy(0, { from: alice, value: priceOfalice })
+            await instance.buy(firstTokenId, { from: alice, value: priceOfalice })
 
             var ownerBalanceAfter = await web3.eth.getBalance(owner);
             var aliceBalanceAfter = await web3.eth.getBalance(alice);
 
-            const token = await instance.getCriollo.call(0);
+            const token = await instance.getCriollo.call(firstTokenId);
 
             assert.equal(
                 token[2].toString(10),
@@ -130,7 +130,7 @@ contract("CriolloToken", function (accounts) {
             );
 
             assert.equal(
-                await instance.ownerOf(0),
+                await instance.ownerOf(firstTokenId),
                 alice,
                 'the new token owner should be alice',
             );
@@ -155,27 +155,27 @@ contract("CriolloToken", function (accounts) {
 
         beforeEach(async () => {
             await instance.safeMint(initialPrice, { from: owner });
-            await instance.addToMarketPlace(0, listingPrice, { from: owner });
-            await instance.buy(0, { from: alice, value: priceOfalice })
+            await instance.addToMarketPlace(firstTokenId, listingPrice, { from: owner });
+            await instance.buy(firstTokenId, { from: alice, value: priceOfalice })
         })
 
         it("should revert when try to ship a token which does not exist", async () => {
-            await catchRevert(instance.shipped(1, { from: owner }));
+            await catchRevert(instance.shipped(2, { from: owner }));
         })
 
         it("should revert when try to ship a token which is not SoldAndLocked", async () => {
-            await catchRevert(instance.shipped(1, { from: owner }));
+            await catchRevert(instance.shipped(2, { from: owner }));
         })
 
         it("should revert when alice or bob try to ship a token", async () => {
-            await catchRevert(instance.shipped(0, { from: alice }));
-            await catchRevert(instance.shipped(0, { from: bob }));
+            await catchRevert(instance.shipped(firstTokenId, { from: alice }));
+            await catchRevert(instance.shipped(firstTokenId, { from: bob }));
         })
 
         it("should be able to ship a token which was sold to bob and update state accordingly", async () => {
-            await instance.shipped(0, { from: owner });
+            await instance.shipped(firstTokenId, { from: owner });
 
-            const token = await instance.getCriollo.call(0);
+            const token = await instance.getCriollo.call(firstTokenId);
 
             assert.equal(
                 token[2].toString(10),
@@ -192,25 +192,25 @@ contract("CriolloToken", function (accounts) {
         beforeEach(async () => {
             await instance.safeMint(initialPrice, { from: owner });
             await instance.safeMint(initialPrice, { from: owner });
-            await instance.addToMarketPlace(0, listingPrice, { from: owner });
-            await instance.addToMarketPlace(1, listingPrice, { from: owner });
-            await instance.buy(0, { from: alice, value: priceOfalice })
-            await instance.buy(1, { from: alice, value: priceOfalice })
-            await instance.shipped(0, { from: owner });
+            await instance.addToMarketPlace(firstTokenId, listingPrice, { from: owner });
+            await instance.addToMarketPlace(2, listingPrice, { from: owner });
+            await instance.buy(firstTokenId, { from: alice, value: priceOfalice })
+            await instance.buy(2, { from: alice, value: priceOfalice })
+            await instance.shipped(firstTokenId, { from: owner });
         })
 
         it("should revert when try to Unlock a token which is not shipped", async () => {
-            await catchRevert(instance.unlockToken(1, { from: alice }));
+            await catchRevert(instance.unlockToken(2, { from: alice }));
         })
 
         it("should revert when try to Unlock a token when your are not the token owner", async () => {
-            await catchRevert(instance.unlockToken(0, { from: bob }));
+            await catchRevert(instance.unlockToken(firstTokenId, { from: bob }));
         })
 
         it("should be able to Unlock when received and update the state accordingly", async () => {
-            await instance.unlockToken(0, { from: alice });
+            await instance.unlockToken(firstTokenId, { from: alice });
 
-            const token = await instance.getCriollo.call(0);
+            const token = await instance.getCriollo.call(firstTokenId);
 
             assert.equal(
                 token[2].toString(10),
@@ -227,17 +227,17 @@ contract("CriolloToken", function (accounts) {
         beforeEach(async () => {
             await instance.safeMint(initialPrice, { from: owner });
             await instance.safeMint(initialPrice, { from: owner });
-            await instance.addToMarketPlace(0, listingPrice, { from: owner });
-            await instance.addToMarketPlace(1, listingPrice, { from: owner });
-            await instance.buy(0, { from: alice, value: priceOfalice })
-            await instance.buy(1, { from: alice, value: priceOfalice })
-            await instance.shipped(0, { from: owner });
-            await instance.shipped(1, { from: owner });
-            await instance.unlockToken(0, { from: alice });
+            await instance.addToMarketPlace(firstTokenId, listingPrice, { from: owner });
+            await instance.addToMarketPlace(2, listingPrice, { from: owner });
+            await instance.buy(firstTokenId, { from: alice, value: priceOfalice })
+            await instance.buy(2, { from: alice, value: priceOfalice })
+            await instance.shipped(firstTokenId, { from: owner });
+            await instance.shipped(2, { from: owner });
+            await instance.unlockToken(firstTokenId, { from: alice });
         })
 
         it("should revert when Bob try to buy a token to Alice and the token is not Unlocked", async () => {
-            await catchRevert(instance.buy(1, { from: bob, value: listingPrice }));
+            await catchRevert(instance.buy(2, { from: bob, value: listingPrice }));
         })
 
         it("should allow Bob to buy a token to Alice and update state accordingly", async () => {
@@ -245,12 +245,12 @@ contract("CriolloToken", function (accounts) {
             var bobBalanceBefore = await web3.eth.getBalance(bob);
             var aliceBalanceBefore = await web3.eth.getBalance(alice);
 
-            await instance.buy(0, { from: bob, value: priceOfalice })
+            await instance.buy(firstTokenId, { from: bob, value: priceOfalice })
 
             var bobBalanceAfter = await web3.eth.getBalance(bob);
             var aliceBalanceAfter = await web3.eth.getBalance(alice);
 
-            const token = await instance.getCriollo.call(0);
+            const token = await instance.getCriollo.call(firstTokenId);
 
             assert.equal(
                 token[2].toString(10),
@@ -259,7 +259,7 @@ contract("CriolloToken", function (accounts) {
             );
 
             assert.equal(
-                await instance.ownerOf(0),
+                await instance.ownerOf(firstTokenId),
                 bob,
                 'the new token owner should be bob',
             );
