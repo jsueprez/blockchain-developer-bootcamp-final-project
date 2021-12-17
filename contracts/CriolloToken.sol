@@ -334,4 +334,8 @@ contract CriolloToken is ERC721Enumerable, Ownable {
         );
         super._transfer(from, to, tokenId);
     }
+
+    function isOwner() public view returns (bool) {
+        return msg.sender == owner();
+    }
 }

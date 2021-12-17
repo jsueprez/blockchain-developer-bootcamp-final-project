@@ -10,25 +10,34 @@ class Card extends Component {
     if (state === '0') return 'Not listed'
     if (state === '1') return 'Buy'
     if (state === '2') return 'Locked'
-    if (state === '3') return 'Shipped'
+    if (state === '3') return 'Unlock Nft'
     if (state === '4') return 'Unlocked'
   }
 
-  raiseBuyNft = (id, price) => {
-    this.props.onBuyNft(id, price);
+  raiseNftAction = (id, price, state) => {
+    if (state === 'Buy') {
+      console.log('buying')
+      this.props.onBuyNft(id, price);
+    }
+    if (state === 'Unlock Nft') {
+      console.log('unlocking')
+      this.props.onUnlockNft(id);
+    }
+
   }
 
-  renderCardButton(state) {
-    const { id, price } = this.props.nft;
+  renderCardButton() {
+    const { id, price, state } = this.props.nft;
     const label = this.getTextState(state);
-    const buyEnable = label === 'Buy' ? ' btn-danger button-enable ' : 'button-disable disabled'
+
+    let buttonEnable = 'button-disable disabled';
+    if (label === 'Buy' || label === 'Unlock Nft') buttonEnable = ' btn-danger button-enable '
+
     return (
       <button
         type="Success"
-        className={`btn ${buyEnable}`}
-
-        onClick={() => this.raiseBuyNft(id, price)}
-
+        className={`btn ${buttonEnable}`}
+        onClick={() => this.raiseNftAction(id, price, this.getTextState(state))}
       >
         {label}
       </button>

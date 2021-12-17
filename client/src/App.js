@@ -7,6 +7,7 @@ import Criollo from "./contracts/CriolloToken.json";
 import Web3 from 'web3'
 
 import { ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fetchNft } from './services/nftService'
 
@@ -20,7 +21,8 @@ class App extends Component {
     balance: null,
     contract: null,
     nfts: [],
-    myNfts: []
+    myNfts: [],
+    contractOwner: null
   };
 
   async UNSAFE_componentWillMount() {
@@ -35,6 +37,7 @@ class App extends Component {
       /* Case 2 - User switch account */
       window.ethereum.on('accountsChanged', async (accounts) => {
         await this.update()
+        if (!this.state.contractOwner) window.location.href = "/";
       });
       /* Case 3 - User switch network */
       window.ethereum.on('chainChanged', async () => {
@@ -46,14 +49,14 @@ class App extends Component {
 
   update = async () => {
     try {
-      let web3, network, account, netId, contract, nfts, myNfts, balance
+      let web3, network, account, netId, contract, nfts, myNfts, balance, contractOwner
 
       web3 = await this.loadWeb3()
       network = await this.loadNetwork(web3)
       account = await this.loadAccount(web3)
       netId = await web3.eth.net.getId()
       contract = await this.loadContract(web3, netId)
-      // contract ? nfts = await this.loadNftData(contract) : nfts = [];
+      contractOwner = await this.checkOwnerShip(contract)
       nfts = await this.loadNftData(contract)
       myNfts = await this.loadMyNfts(contract);
 
@@ -110,8 +113,6 @@ class App extends Component {
         }
         return item;
       }));
-      console.log('mis nft:', items)
-
       this.setState({ myNfts: items })
 
       return items;
@@ -182,10 +183,20 @@ class App extends Component {
       this.setState({ contract })
       return contract;
     } catch (e) {
-      window.alert('Wrong network!');
+      toast.info('Wrong network!');
       console.log('Error, load contract: ', e);
       this.setState({ contract: null })
       return null;
+    }
+  }
+
+  checkOwnerShip = async (contract) => {
+    try {
+      const contractOwner = await contract.methods.isOwner().call();
+      this.setState({ contractOwner })
+      return contractOwner;
+    } catch (e) {
+      console.log('Error, loaing the contract owner', e)
     }
   }
 
@@ -201,19 +212,77 @@ class App extends Component {
       await contract.methods.buy(id).send({ from: account, value: amount })
         .on('receipt', async (r) => {
           this.update()
-          window.alert(`Congratulations, you've received NFT with ID: ${id}\nAddress: ${Criollo.networks[netId].address}`)
+          toast.success(`Congratulations, you've received Criollo NFT with ID: ${id}`)
         })
         .on('error', (error) => {
           console.error(error)
-          window.alert(`There was an error!`)
+          toast.error(`There was an error!`)
         })
     } catch (e) {
       console.log('Error, buy NFT', e)
     }
   }
 
+  handleUnlockNft = async (id) => {
+    try {
+      const web3 = await this.loadWeb3();
+      await this.loadNetwork(web3);
+      const account = await this.loadAccount(web3);
+      const netId = await web3.eth.net.getId();
+      const contract = await this.loadContract(web3, netId);
+
+      await contract.methods.unlockToken(id).send({ from: account })
+        .on('receipt', async (r) => {
+          this.update()
+          toast.success(`Congratulations, you've unlocked Criollo NFT with ID: ${id}`)
+        })
+        .on('error', (error) => {
+          console.error(error)
+          toast.error(`There was an error!`)
+        })
+    } catch (e) {
+      console.log('Error, Unlocking NFT', e)
+    }
+  }
+
+  handleChangeNftState = async (id, price, state) => {
+    try {
+      const web3 = await this.loadWeb3();
+      await this.loadNetwork(web3);
+      const account = await this.loadAccount(web3);
+      const netId = await web3.eth.net.getId();
+      const contract = await this.loadContract(web3, netId);
+      const amount = web3.utils.toWei(price, 'ether');
+
+      state === '0' ?
+        await contract.methods.addToMarketPlace(id, amount).send({ from: account })
+          .on('receipt', async (r) => {
+            this.update()
+            toast.success(`Criollo #${id} has been added to the MarketPlace`)
+          })
+          .on('error', (error) => {
+            console.error(error)
+            toast.error(`There was an error adding the item to the Market Place!`)
+          })
+        :
+        await contract.methods.shipped(id).send({ from: account })
+          .on('receipt', async (r) => {
+            this.update()
+            toast.success(`Criollo #${id} has been Shipped`)
+          })
+          .on('error', (error) => {
+            console.error(error)
+            toast.error(`There was an error changing the item state to : Shipped!`)
+          })
+    } catch (e) {
+      console.log('Error, changing the state of Criollo item', e)
+    }
+
+  }
+
   render() {
-    const { web3, network, account, nfts, balance, myNfts } = this.state;
+    const { web3, network, account, nfts, balance, myNfts, contractOwner } = this.state;
+
     if (!web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
@@ -226,12 +295,17 @@ class App extends Component {
           account={account}
           network={network}
           balance={balance}
+          contractOwner={contractOwner}
         >
         </NavBar>
         <Main
           nfts={nfts}
           myNfts={myNfts}
           onBuyNft={this.handleBuyNft}
+          onUnlockNft={this.handleUnlockNft}
+          onChangeNftState={this.handleChangeNftState}
+          contractOwner={contractOwner}
+
         >
         </Main>
       </React.Fragment>

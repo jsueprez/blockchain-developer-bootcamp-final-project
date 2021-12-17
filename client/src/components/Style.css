@@ -222,3 +222,19 @@ img, video {
   width: 180px;
   height: 43px;
 }
+
+.clickable{
+  cursor:pointer;
+}
+
+.page-item.active .page-link{
+  background-color: #009985  !important;
+  border-color: #009985  !important;
+  color: #ffffff;
+}
+
+.list-group-item.active{
+  background-color: #009985  !important;
+  border-color: #009985  !important;
+}
+

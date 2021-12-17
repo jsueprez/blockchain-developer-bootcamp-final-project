@@ -5,7 +5,7 @@ import Identicon from 'identicon.js';
 
 class NavBar extends Component {
     render() {
-        const { web3, account, network, balance } = this.props;
+        const { web3, account, network, balance, contractOwner } = this.props;
         return (
             <nav className="navbar navbar-expand-lg navbar-light bg-nav mb-4 text-center">
                 <div className="container-fluid">
@@ -21,6 +21,12 @@ class NavBar extends Component {
                             <NavLink className="nav-item nav-link text-white" to="/myNft">
                                 MY NFT
                             </NavLink>
+                            {contractOwner ?
+                                <NavLink className="nav-item nav-link text-white" to="/admin">
+                                    ADMIN
+                                </NavLink> :
+                                null
+                            }
                         </div>
                     </div>
                     {this.props.account ?
