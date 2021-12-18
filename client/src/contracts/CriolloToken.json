@@ -45807,12 +45807,12 @@
         }
       },
       "links": {},
-      "address": "0x6f84742680311CEF5ba42bc10A71a4708b4561d1",
-      "transactionHash": "0x8a4b6c7e009989e6d809f2d0bdeb915d0934d452da35bc13cdc32593fc403c1e"
+      "address": "0xCfEB869F69431e42cdB54A4F4f105C19C080A601",
+      "transactionHash": "0x0e3f25b3135cdfc18aac244582e67b3317d9d6791e43995e43227c6bfc722b81"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-12-18T16:20:57.230Z",
+  "updatedAt": "2021-12-18T16:48:08.577Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Josue Perez",

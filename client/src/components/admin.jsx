@@ -19,13 +19,7 @@ class Admin extends Component {
   }
 
   columns = [
-    {
-      path: 'id', label: 'Token Id',
-      content: nft =>
-        <Link
-          to={`/admin/${nft.id}`}>{nft.id}
-        </Link>
-    },
+    { path: 'id', label: 'Token Id' },
     { path: 'state', label: 'State' },
     { path: 'price', label: 'Price' },
     {
