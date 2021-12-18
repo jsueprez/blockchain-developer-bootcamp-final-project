@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import _ from 'lodash';
-import { Link } from 'react-router-dom'
 
 const Pagination = ({ itemsCount, pageSize, currentPage, onPageChanged }) => {
     const pagesCount = Math.ceil(itemsCount / pageSize);
@@ -20,7 +19,7 @@ const Pagination = ({ itemsCount, pageSize, currentPage, onPageChanged }) => {
                         key={page}
                         className={page === currentPage ? classes + ' active' :
                             classes}>
-                        <Link style={{ cursor: 'pointer' }} className="page-link" onClick={() => onPageChanged(page)}>{page}</Link>
+                        <a style={{ cursor: 'pointer' }} className="page-link" onClick={() => onPageChanged(page)}>{page}</a>
                     </li>
                 ))}
 
