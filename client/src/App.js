@@ -282,10 +282,6 @@ class App extends Component {
 
   render() {
     const { web3, network, account, nfts, balance, myNfts, contractOwner } = this.state;
-
-    if (!web3) {
-      return <div>Loading Web3, accounts, and contract...</div>;
-    }
     return (
       <React.Fragment>
 

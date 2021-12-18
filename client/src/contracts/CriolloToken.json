@@ -45636,8 +45636,8 @@
         }
       },
       "links": {},
-      "address": "0x086Fe2115A261D7D4C9a3de57f6144DA3cAD3136",
-      "transactionHash": "0x224580541926cb9d0fef61d953da821c046061b84b9f8c8ed343d4453e3de56b"
+      "address": "0xF6F1f40AfE996c0eFf06e978e95842e4A2d45240",
+      "transactionHash": "0xb1f21fc847c0d07d3662981a718fee3cf2dacf0a98b53740ea3aac39e04db1b2"
     },
     "5777": {
       "events": {
@@ -45812,7 +45812,7 @@
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-12-17T17:09:08.615Z",
+  "updatedAt": "2021-12-18T16:20:57.230Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Josue Perez",
