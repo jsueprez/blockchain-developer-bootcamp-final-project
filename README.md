@@ -1,5 +1,24 @@
 # Final project - Criollo
-### About
+
+## Deployed version url:
+https://criollomarket.vercel.app/
+
+## How to run this project locally:
+
+### Prerequisites
+- Node.js >= v14
+- Truffle and Ganache
+- Npm
+- git checkout
+
+### Contracts
+- Run `npm install` in project root to install Truffle build and smart contract dependencies
+- In another terminal run local testnet in port `7545` with an Ethereum client, e.g. Ganache  
+- `truffle migrate --network development`
+- `truffle console --network development`
+- Run tests in Truffle console: `test`
+
+## About
 Criollo is a NFT Market Place project that combine the nature of art, the tasty flavor of chocolate and the technology behind the blockchain to create the most unique experience.  
 
 This project was inspired by [@aisthisi_nft](https://aisthisi.art/)
@@ -34,12 +53,7 @@ Inititally, for the purpose of this final project, Criollo will consists on two 
 - Truffle and Ganache
 - `git checkout master`
 
-### Contracts
-- Run `npm install` in project root to install Truffle build and smart contract dependencies
-- Run local testnet in port `7545` with an Ethereum client, e.g. Ganache
-- `truffle migrate --network development`
-- `truffle console --network development`
-- Run tests in Truffle console: `test`
+
 
 ### Frontend
 - cd client
