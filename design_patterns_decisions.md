@@ -6,4 +6,4 @@
 
 ## Inheritance and Interfaces
 
-- `CriolloToken` contract inherits the OpenZeppelin `ERC721` which is a standard for representing ownership of non-fungible tokens, and `Ownable` contract to enable ownership.
+- `CriolloToken` contract inherits the OpenZeppelin `ERC721Enumerable` which is a standard for representing ownership of non-fungible tokens, and `Ownable` contract to enable ownership.
