@@ -45636,8 +45636,8 @@
         }
       },
       "links": {},
-      "address": "0xE94775664118632dCf0aD641c4E58e36D09a394F",
-      "transactionHash": "0xcfb6f6e7800cb6b4ea833796edf1a97cebe6005a6c3749a069af067d88b128db"
+      "address": "0xa8e8a258d5995B4eE8d1C0902428B70C03f8548f",
+      "transactionHash": "0x0060c64c4f638136946c86074ab4a95025c6956d79ca94a3d51c472863d0ef94"
     },
     "5777": {
       "events": {
@@ -45807,12 +45807,12 @@
         }
       },
       "links": {},
-      "address": "0x26b4AFb60d6C903165150C6F0AA14F8016bE4aec",
-      "transactionHash": "0xe9238f92e66676ef6ee7f1bb7b1ff16e6adf5d473bb6226f6924f18f952c2af4"
+      "address": "0xA94B7f0465E98609391C623d0560C5720a3f2D33",
+      "transactionHash": "0xad8ee5abe278e2d0c5b49789fd73d5367373c7c7c20c606b99ceb00f5189a6de"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-12-18T22:21:21.398Z",
+  "updatedAt": "2021-12-18T22:45:43.170Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "Josue Perez",

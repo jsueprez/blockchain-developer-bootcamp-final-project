@@ -20,7 +20,7 @@ class NavBar extends Component {
                             <NavLink className="nav-item nav-link text-white" to="/myNft">
                                 MY NFT
                             </NavLink>
-                            {contractOwner ?
+                            {account && contractOwner ?
                                 <NavLink className="nav-item nav-link text-white" to="/admin">
                                     ADMIN
                                 </NavLink> :
