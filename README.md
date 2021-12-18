@@ -101,13 +101,11 @@ $ npm start
 ```
 - If you get TXRejectedError when sending a transaction, reset your Metamask account from Advanced settings.
 
-### Contracts
-- Run `npm install` in project root to install Truffle build and smart contract dependencies
-- In another terminal run local testnet with an Ethereum client:
-- `ganache-cli`  
-- `truffle console --network ganache_cli`
-- Run tests in Truffle console: `test`
-- 
+## Screencast link
+
+## Public Ethereum wallet for certification:
+
+0x6f432D387CfAd37e960D94B6120d2E850Aa2c720
 
 ## About
 Criollo is a NFT Market Place project that combine the nature of art, the tasty flavor of chocolate and the technology behind the blockchain to create the most unique experience.  
@@ -127,35 +125,16 @@ Inititally, for the purpose of this final project, Criollo will consists on two 
 3. Criollo list the NFT to the Market Place.
 4. The buyer could buy only NFTs that are in Criollo's Market Place.
 5. Once the buyer buys a NFT, NFT get locked, so the buyer could not sell/transfer it.
-6. Criollo send the physical asset(Criollos's Chocolate) to the buyer and update the status of the NFT.
+6. Criollo send the physical asset(Criollos's Chocolate) to the buyer and update the status of the NFT. 
 7. Once the buyer received the physical asset, the NFT can be unlocked by the buyer.
 8. The buys can now sell/transfer the NFT.
-
-## Deployed version url:
+Note: Steps 3 and 6 are done in the "Admin" Page, and only the owner of the contract has access to it.
 
 ### Future implementation
 - Criollo will let the users trade the NFT in its own Marketplace.
 - Allow the user to introduce a shipping addres.
 - Proof of receipt of physical asset. 
 - more ideas coming...
-
-### Prerequisites
-- Node.js >= v14
-- Truffle and Ganache
-- `git checkout master`
-
-
-
-### Frontend
-- cd client
-- npm install
-- npm start
-- Open http://localhost:3000
-
-
-## Screencast link
-
-## Public Ethereum wallet for certification:
 
 ## FILE STRUCTURE
 - `client`: Project's React frontend.
