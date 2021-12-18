@@ -3,7 +3,6 @@ import Table from './common/table'
 import ListGroup from './common/listGroup'
 import Pagination from './common/pagination'
 import { paginate } from '../utils/paginate'
-import { Link } from 'react-router-dom';
 
 class Admin extends Component {
   state = {

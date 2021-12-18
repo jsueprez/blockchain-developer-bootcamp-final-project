@@ -26,7 +26,6 @@ class App extends Component {
   };
 
   async UNSAFE_componentWillMount() {
-    console.log('UNSAFE_componentWillMount')
     await this.loadBlockchainData();
   };
 
@@ -196,7 +195,7 @@ class App extends Component {
       this.setState({ contractOwner })
       return contractOwner;
     } catch (e) {
-      console.log('Error, loaing the contract owner', e)
+      console.log('Error, checking ownership', e)
     }
   }
 
