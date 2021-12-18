@@ -1,13 +1,12 @@
 # Final project - Criollo
 ### About
-Criollo is a NFT Store project that combine the nature of art, the tasty flavor of chocolate and the technology behind the blockchain to create the most unique experience.  
+Criollo is a NFT Market Place project that combine the nature of art, the tasty flavor of chocolate and the technology behind the blockchain to create the most unique experience.  
 
 This project was inspired by [@aisthisi_nft](https://aisthisi.art/)
 
 ## Project description
 Inititally, for the purpose of this final project, Criollo will consists on two parties:
 
-Covered in  the final Project
 - Criollo[Contract owner], will mint all the NFT.
 
 - The buyer[Token owner], could buy/trade the NFT.
@@ -21,7 +20,6 @@ Covered in  the final Project
 6. Criollo send the physical asset(Criollos's Chocolate) to the buyer and update the status of the NFT.
 7. Once the buyer received the physical asset, the NFT can be unlocked by the buyer.
 8. The buys can now sell/transfer the NFT.
-9. Criollo has the possibility to withdraw funds received by the sales of the NFT.
 
 ## Deployed version url:
 
@@ -44,6 +42,11 @@ Covered in  the final Project
 - Run tests in Truffle console: `test`
 
 ### Frontend
+- cd client
+- npm install
+- npm start
+- Open http://localhost:3000
+
 
 ## Screencast link
 
