@@ -102,6 +102,7 @@ $ npm start
 - If you get TXRejectedError when sending a transaction, reset your Metamask account from Advanced settings.
 
 ## Screencast link
+https://youtu.be/MwbYAcgQNvc
 
 ## Public Ethereum wallet for certification:
 
@@ -142,4 +143,5 @@ Note: Steps 3 and 6 are done in the "Admin" Page, and only the owner of the cont
 - `contracts`: Smart contracts that are deployed in the Rinkeby testnet.
 - `migrations`: Migration files for deploying contracts in `contracts` directory.
 - `test`: Tests for smart contracts.
+- `scripts`: Scripts for automate minting process and listing items to marketplace.
 

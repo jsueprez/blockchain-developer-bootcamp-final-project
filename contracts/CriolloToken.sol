@@ -64,15 +64,6 @@ contract CriolloToken is ERC721Enumerable, Ownable {
         _;
     }
 
-    /// @dev Generate an exception if token is not unlocked
-    modifier isUnlocked(uint256 _id) {
-        require(
-            criollos[_id].state == State.Unlocked,
-            "CriolloToken: Error, This token is not Unlocked !"
-        );
-        _;
-    }
-
     /// @dev Generate an exception if tocken is not Locked.
     modifier isLocked(uint256 _id) {
         require(
@@ -159,6 +150,7 @@ contract CriolloToken is ERC721Enumerable, Ownable {
         );
     }
 
+    /// @notice Get the token URI
     function tokenURI(uint256 tokenId)
         public
         view
@@ -222,6 +214,8 @@ contract CriolloToken is ERC721Enumerable, Ownable {
         return (tokenId, price, state);
     }
 
+    /// @notice Fetch all the NFT
+    /// @return Criollo[] - array of nfts
     function fetchMarketItems() public view returns (Criollo[] memory) {
         uint256 itemsCount = _tokenIdCounter.current();
         uint256 currentIndex = 0;
@@ -237,7 +231,8 @@ contract CriolloToken is ERC721Enumerable, Ownable {
         return items;
     }
 
-    /* Returns onlyl items that a user has purchased */
+    /// @notice Fetch owned NFT
+    /// @return Criollo[] - only nfts that a user has purchased
     function fetchMyNft() public view returns (Criollo[] memory) {
         uint256 itemsCount = _tokenIdCounter.current();
         uint256 itemsOwned = 0;
@@ -308,6 +303,7 @@ contract CriolloToken is ERC721Enumerable, Ownable {
             "CriolloToken: Error, You are not the token owner!"
         );
         criollos[_id].state = State.Unlocked;
+        emit TokenUnlocked(_id, msg.sender);
     }
 
     /// @notice Withdraw balance
