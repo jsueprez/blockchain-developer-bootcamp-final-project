@@ -81,7 +81,7 @@ Duplicate the .env.example file and rename it .env. Add the PRIVATE_KEYS as the 
 account you will use to deploy. This is the same account you will add testnet ether to. On Metamask click Account Details-> Export Private Key to copy private key. Go to [infura.io](https://infura.io/) and create a project and copy the ID into .env as INFURA_ID
 
 - Note that you can use --reset when migrating to replace add new deployments 
-e.g truffle migrate --reset --network rinnkeby
+e.g truffle migrate --reset --network rinkeby
 
 1. Migrate contracts to Ethereum Rinkeby testnet. You will need Rinkeby ETH to pay for transactions. 
 Get Rinkeby ETH into a Metamask account from this [Rinkeby faucet click here](http://rinkeby-faucet.com/). Copy your Metamask address into site and click "Submit" or this [Rinkey Faucet here](https://faucet.rinkeby.io/) which is prone to not working at times.
