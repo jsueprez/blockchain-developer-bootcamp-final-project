@@ -108,12 +108,12 @@ https://youtu.be/MwbYAcgQNvc
 
 0x6f432D387CfAd37e960D94B6120d2E850Aa2c720
 
-## About
+## Project description
+
 Criollo is a NFT Market Place project that combine the nature of art, the tasty flavor of chocolate and the technology behind the blockchain to create the most unique experience.  
 
 This project was inspired by [@aisthisi_nft](https://aisthisi.art/)
 
-## Project description
 Inititally, for the purpose of this final project, Criollo will consists on two parties:
 
 - Criollo[Contract owner], will mint all the NFT.
