@@ -16,11 +16,9 @@ class Card extends Component {
 
   raiseNftAction = (id, price, state) => {
     if (state === 'Buy') {
-      console.log('buying')
       this.props.onBuyNft(id, price);
     }
     if (state === 'Unlock Nft') {
-      console.log('unlocking')
       this.props.onUnlockNft(id);
     }
 

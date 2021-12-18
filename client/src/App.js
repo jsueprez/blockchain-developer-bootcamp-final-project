@@ -49,18 +49,18 @@ class App extends Component {
 
   update = async () => {
     try {
-      let web3, network, account, netId, contract, nfts, myNfts, balance, contractOwner
+      let web3, account, netId, contract
 
       web3 = await this.loadWeb3()
-      network = await this.loadNetwork(web3)
+      await this.loadNetwork(web3)
       account = await this.loadAccount(web3)
       netId = await web3.eth.net.getId()
       contract = await this.loadContract(web3, netId)
-      contractOwner = await this.checkOwnerShip(contract)
-      nfts = await this.loadNftData(contract)
-      myNfts = await this.loadMyNfts(contract);
+      await this.checkOwnerShip(contract)
+      await this.loadNftData(contract)
+      await this.loadMyNfts(contract);
 
-      account && contract ? balance = await this.loadBalance(web3, account) : balance = null;
+      if (account && contract) await this.loadBalance(web3, account);
     } catch (e) {
       console.log('Error, update data: ', e)
     }

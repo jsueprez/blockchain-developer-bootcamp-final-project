@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ShowRoom from './common/showRoom';
 
 const MyNft = ({ nfts, onBuyNft, onUnlockNft }) => {

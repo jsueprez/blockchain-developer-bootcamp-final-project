@@ -12,11 +12,6 @@ class Admin extends Component {
     selectedTokenState: { _id: '5', name: 'Any State' }
   }
 
-  handleChange = (e) => {
-
-    console.log('working')
-  }
-
   getLabel(state) {
     if (state === '0') return 'List in Marketplace'
     if (state === '2') return 'Mark as shipped'

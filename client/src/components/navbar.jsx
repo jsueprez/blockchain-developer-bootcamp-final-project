@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import eth from '../images/eth.png'
 import Identicon from 'identicon.js';
 
 class NavBar extends Component {
@@ -29,41 +28,41 @@ class NavBar extends Component {
                             }
                         </div>
                     </div>
-                    {this.props.account ?
+                    {account ?
                         <div className="d-flex text-white">
                             <ul className="navbar-nav ml-auto ">
                                 <li className="nav-item me-2 networkNav small">
-                                    <b >{this.props.network}</b>
+                                    <b >{network}</b>
                                 </li>
                                 <li className="nav-item  me-2 balanceNav small">
-                                    <b className="m-2">{this.props.balance}</b>
+                                    <b className="m-2">{balance}</b>
                                     <b>ETH</b>
                                 </li>
                                 <li className="nav-item accountNav small">
-                                    {this.props.network === 'Main' || this.props.network === 'Private' || this.props.network === 'Wrong network'
+                                    {network === 'Main' || network === 'Private' || network === 'Wrong network'
                                         ? <b><a
                                             style={{ color: "#009985" }}
-                                            href={`https://etherscan.io/address/` + this.props.account}
+                                            href={`https://etherscan.io/address/` + account}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            {this.props.account.substring(0, 5) + '...' + this.props.account.substring(38, 42)}
+                                            {account.substring(0, 5) + '...' + account.substring(38, 42)}
                                             &nbsp;
                                         </a></b>
                                         : <b><a
                                             style={{ color: "#009985" }}
-                                            href={`https://${this.props.network}.etherscan.io/address/` + this.props.account}
+                                            href={`https://${network}.etherscan.io/address/` + account}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
-                                            {this.props.account.substring(0, 6) + '...' + this.props.account.substring(38, 42)}
+                                            {account.substring(0, 6) + '...' + account.substring(38, 42)}
                                         </a></b>}
                                     <img
                                         alt="id"
                                         className="id border border-success ms-2"
                                         width="20"
                                         height="20"
-                                        src={`data:image/png;base64,${new Identicon(this.props.account, 30).toString()}`}
+                                        src={`data:image/png;base64,${new Identicon(account, 30).toString()}`}
                                     />
                                 </li>
                             </ul>
@@ -72,7 +71,7 @@ class NavBar extends Component {
                         <div className="d-flex text-white">
                             <div className="collapse navbar-collapse">
                                 <ul className="navbar-nav ml-auto">
-                                    {this.props.web3
+                                    {web3
                                         ? <button
                                             type="Success"
                                             className="btn btn-outline btn-block "
