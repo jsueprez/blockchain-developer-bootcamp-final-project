@@ -65,6 +65,7 @@ The Criollo Market dApp is able to work with 2 differents networks, Rinkeby, and
 
 To configure the ganache-cli on metamask, add a network with the following parameters:
 ![image](https://user-images.githubusercontent.com/19668390/146653762-abae6a2f-2df0-4da0-a949-561abb377218.png)
+
 To add the wallet given by the ganache-cli instance in Metamask, copy the Mnemonic given by the ganache_cli and import it in metamask.
 ![image](https://user-images.githubusercontent.com/19668390/146654119-963e4a7e-a959-486b-b671-2fe8f408cff1.png)
 
