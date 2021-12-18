@@ -128,6 +128,7 @@ Inititally, for the purpose of this final project, Criollo will consists on two 
 6. Criollo send the physical asset(Criollos's Chocolate) to the buyer and update the status of the NFT. 
 7. Once the buyer received the physical asset, the NFT can be unlocked by the buyer.
 8. The buys can now sell/transfer the NFT.
+
 Note: Steps 3 and 6 are done in the "Admin" Page, and only the owner of the contract has access to it.
 
 ### Future implementation
