@@ -63,10 +63,12 @@ It should open a page in your browser, otherwise open it manually and go to: htt
 
 The Criollo Market dApp is able to work with 2 differents networks, Rinkeby, and ganache-cli.
 
-To configure the ganache-cli on metamask, add a network with the following parameters:
+#### To configure the ganache-cli on metamask, add a network with the following parameters:
+
 ![image](https://user-images.githubusercontent.com/19668390/146653762-abae6a2f-2df0-4da0-a949-561abb377218.png)
 
-To add the wallet given by the ganache-cli instance in Metamask, copy the Mnemonic given by the ganache_cli and import it using secret recovery phrase.
+#### To add the wallet given by the ganache-cli instance in Metamask, copy the Mnemonic given by the ganache_cli and import it using secret recovery phrase.
+
 ![image](https://user-images.githubusercontent.com/19668390/146654119-963e4a7e-a959-486b-b671-2fe8f408cff1.png)
 
 ## How to run this project on Ethereum tesnet:
