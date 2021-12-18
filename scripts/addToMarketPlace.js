@@ -8,7 +8,7 @@ var Web3 = require('web3');
 module.exports = async function (callback) {
   try {
     const tokensToMarketPlace = 25;
-    const etherValue = '0.5'
+    const etherValue = '0.0001'
     const weiPrice = Web3.utils.toWei(etherValue, 'ether').toString();
     const criollo = await CRIOLLO.deployed()
 
